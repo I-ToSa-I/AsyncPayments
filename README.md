@@ -28,21 +28,22 @@ async def main():
     print('Никнейм: ', balance_lolz.username)
     print('Доступно: ', balance_lolz.balance)
     print('В холде: ', balance_lolz.hold)
-    ###########################################
+    print('--------------')
     print("Aaio:")
     print('Доступно: ', balance_aaio.balance)
     print('В холде: ', balance_aaio.hold)
     print('Реферальный: ', balance_aaio.referral)
-    ###########################################
+    print('--------------')
     print("CryptoBot:")
     for balance in balance_crypto_bot:
         print(f"Доступно {balance.currency_code}: ", balance.available, f" (В холде: {balance.onhold})")
-    ###########################################
+    print('--------------')
     print("CrystalPay:")
     for currency, balance in balance_crystal_pay:
         print(f"Доступно {currency}:", balance.amount, f" {balance.currency}")
     
-    
+    print('------------------------------------------')
+        
     order_lolz = lolz.get_payment_link(15, comment="orderId")
     order_aaio = await aaio.create_payment_url(15, "orderId")
     order_crypto_bot = await cryptoBot.create_invoice(15, currency_type="crypto", asset="USDT")
@@ -52,6 +53,8 @@ async def main():
     print('Aaio: ', order_aaio)
     print('CryptoBot: ', order_crypto_bot.pay_url)
     print('CrystalPay: ', order_crystal_pay.url)
+    
+    print('------------------------------------------')
     
     info_lolz = await lolz.check_status_payment(15, "orderId")
     info_aaio = await aaio.get_order_info("orderId")
@@ -63,15 +66,15 @@ async def main():
     print("Lolz:")
     print("Сумма: ", 15)
     print("Статус: ", info_lolz)
-    #############################
+    print('--------------')
     print("Aaio:")
     print("Сумма: ", info_aaio.amount)
     print("Статус: ", info_aaio.status)
-    #############################
+    print('--------------')
     print("CryptoBot:")
     print("Сумма: ", info_crypto_bot.amount)
     print("Статус: ", info_crypto_bot.status)
-    #############################
+    print('--------------')
     print("CrystalPay:")
     print("Сумма: ", info_crystal_pay.amount)
     print("Статус:", info_crystal_pay.state)
