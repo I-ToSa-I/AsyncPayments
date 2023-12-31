@@ -1,12 +1,12 @@
+from AsyncPayments.requests import RequestsClient
+from typing import Optional, Union
+from models import User, Payments
+
 import json
 import random
 import math
 import time
 import secrets
-
-from typing import Optional
-from AsyncPayments.requests import RequestsClient
-from .models import *
 
 
 class AsyncLolzteamMarketPayment(RequestsClient):
@@ -28,19 +28,23 @@ class AsyncLolzteamMarketPayment(RequestsClient):
             "Accept": "application/json"
         }
         self.__base_url = "https://api.lzt.market"
+        self.__get_method = "GET"
+        self.__payment_name = "crystalPay"
+        self.check_values()
+
+    def check_values(self):
+        if not self.__token or not self.__user_id or not self.__nickname:
+            raise ValueError('No Token, UserID or Nickname specified')
 
     async def get_me(self) -> User:
         """Get info about your account on Zelenka (Lolzteam).
 
         Docs: https://lzt-market.readme.io/reference/marketprofilesettingsgetinfo"""
 
-        if not self.__token :
-            raise Exception('Не указан Token')
-
         url = f'{self.__base_url}/me'
 
 
-        response = await self._request("lolz", "GET", url, headers=self.__headers)
+        response = await self._request(self.__payment_name, self.__get_method, url, headers=self.__headers)
 
         return User(**response['user'])
 
@@ -57,9 +61,6 @@ class AsyncLolzteamMarketPayment(RequestsClient):
         :param is_amount_ceiling: If True: The transfer amount will be rounded up. Defaults to False
 
         :return: Link to transfer (String)"""
-
-        if not self.__nickname:
-            raise Exception('Не указан Nickname')
 
         if is_amount_ceiling:
             amount = math.ceil(amount)
@@ -95,9 +96,6 @@ class AsyncLolzteamMarketPayment(RequestsClient):
         :param is_hold: Optional. Display hold operations.
         :param show_payment_stats: Optional. Display payment stats for selected period (outgoing value, incoming value)."""
 
-        if not self.__token or not self.__user_id:
-            raise Exception('Не указан Token или User ID')
-
         url = f'{self.__base_url}/user/{self.__user_id}/payments'
 
         params = {
@@ -113,16 +111,16 @@ class AsyncLolzteamMarketPayment(RequestsClient):
             "wallet": wallet,
             "comment": comment,
             "is_hold": is_hold,
-            "show_payment_stats": show_payment_stats
+            "show_payment_stats": show_payment_stats,
         }
 
         for key, value in params.copy().items():
             if isinstance(value, bool):
                 params[key] = str(value).lower()
             if value is None:
-                del params[key]
+                params.pop(key)
 
-        response = await self._request("lolz", "GET", url, headers=self.__headers, data=json.dumps(params))
+        response = await self._request(self.__payment_name, self.__get_method, url, headers=self.__headers, data=json.dumps(params))
 
         return Payments(**response)
 
@@ -133,9 +131,6 @@ class AsyncLolzteamMarketPayment(RequestsClient):
         :param comment: Comment indicated in the transaction.
 
         :return: True if payment has been received. Otherwise False"""
-
-        if not self.__token or not self.__user_id:
-            raise Exception('Не указан Token или User ID')
 
         payments = (await self.get_history_payments(type="receiving_money")).payments
 

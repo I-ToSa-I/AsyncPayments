@@ -1,8 +1,7 @@
 from pydantic import BaseModel
-from typing import Union, List
+from typing import List, Optional
 
 
-# Balance
 class MeInfo(BaseModel):
     app_id: int
     name: str
@@ -12,33 +11,33 @@ class Invoice(BaseModel):
     invoice_id: int
     hash: str
     currency_type: str
-    asset: str = None
-    fiat: str = None
+    asset: Optional[str] = None
+    fiat: Optional[str] = None
     amount: str
-    paid_asset: str = None
-    paid_amount: str = None
-    paid_fiat_rate: str = None
-    accepted_assets: List[str] = None
-    fee_asset: str = None
-    fee_amount: float = None
-    fee: str = None
+    paid_asset: Optional[str] = None
+    paid_amount: Optional[str] = None
+    paid_fiat_rate: Optional[str] = None
+    accepted_assets: Optional[List[str]] = None
+    fee_asset: Optional[str] = None
+    fee_amount: Optional[float] = None
+    fee: Optional[str] = None
     bot_invoice_url: str
     pay_url: str
-    description: str = None
+    description: Optional[str] = None
     status: str
     created_at: str
-    paid_usd_rate: str = None
-    usd_rate: str = None
+    paid_usd_rate: Optional[str] = None
+    usd_rate: Optional[str] = None
     allow_comments: bool
     allow_anonymous: bool
-    expiration_date: str = None
-    paid_at: str = None
-    paid_anonymously: bool = None
-    comment: str = None
-    hidden_message: str = None
-    payload: str = None
-    paid_btn_name: str = None
-    paid_btn_url: str = None
+    expiration_date: Optional[str] = None
+    paid_at: Optional[str] = None
+    paid_anonymously: Optional[bool] = None
+    comment: Optional[str] = None
+    hidden_message: Optional[str] = None
+    payload: Optional[str] = None
+    paid_btn_name: Optional[str] = None
+    paid_btn_url: Optional[str] = None
 
 class Check(BaseModel):
     check_id: int
@@ -57,7 +56,7 @@ class Transfer(BaseModel):
     amount: float
     status: str
     completed_at: str
-    comment: str = None
+    comment: Optional[str] = None
 
 class Balance(BaseModel):
     currency_code: str
@@ -78,7 +77,5 @@ class Currency(BaseModel):
     is_fiat: bool
     name: str
     code: str
-    url: str = None
+    url: Optional[str] = None
     decimals: int
-
-

@@ -1,6 +1,7 @@
-from typing import Optional
 from AsyncPayments.requests import RequestsClient
-from .models import *
+from typing import Optional, Union, List
+
+from models import Invoice, MeInfo, Transfer, Balance, Check, ExchangeRate, Currency
 
 
 class AsyncCryptoBot(RequestsClient):
@@ -14,21 +15,25 @@ class AsyncCryptoBot(RequestsClient):
         super().__init__()
         self.__token = token
         self.__headers = {
-            'Crypto-Pay-API-Token': self.__token
+            'Crypto-Pay-API-Token': self.__token,
         }
         self.__base_url = "https://pay.crypt.bot/api"
+        self.__post_method = "POST"
+        self.__payment_name = "cryptoBot"
+        self.check_values()
+
+    def check_values(self):
+        if not self.__token:
+            raise ValueError('No Token specified')
 
     async def get_me(self) -> MeInfo:
         """Use this method to test your app's authentication token. Requires no parameters. On success, returns basic information about an app.
 
         Docs: https://help.crypt.bot/crypto-pay-api#getMe"""
 
-        if not self.__token:
-            raise Exception('Не указан Token')
-
         url = f'{self.__base_url}/getMe/'
 
-        response = await self._request("cryptoBot", "POST", url, headers=self.__headers)
+        response = await self._request(self.__payment_name, self.__post_method, url, headers=self.__headers)
 
         return MeInfo(**response['result'])
 
@@ -61,8 +66,7 @@ callback – “Return”
         :param allow_anonymous: Optional. Allow a user to pay the invoice anonymously. Defaults to True.
         :param expires_in: Optional. You can set a payment time limit for the invoice in seconds. Values between 1-2678400 are accepted. Defaults to 3600
         """
-        if not self.__token:
-            raise Exception('Не указан Token')
+
 
         url = f'{self.__base_url}/createInvoice/'
 
@@ -89,9 +93,9 @@ callback – “Return”
             if isinstance(value, bool):
                 params[key] = str(value).lower()
             if value is None:
-                del params[key]
+                params.pop(key)
 
-        response = await self._request("cryptoBot", "POST", url, headers=self.__headers,
+        response = await self._request(self.__payment_name, self.__post_method, url, headers=self.__headers,
                                        params=params)
 
         return Invoice(**response['result'])
@@ -102,15 +106,13 @@ callback – “Return”
         Docs: https://help.crypt.bot/crypto-pay-api#deleteInvoice
 
         :param invoice_id: Invoice ID"""
-        if not self.__token:
-            raise Exception('Не указан Token')
 
         url = f'{self.__base_url}/deleteInvoice/'
         params = {
-            "invoice_id": invoice_id
+            "invoice_id": invoice_id,
         }
 
-        response = await self._request("cryptoBot", "POST", url, headers=self.__headers,
+        response = await self._request(self.__payment_name, self.__post_method, url, headers=self.__headers,
                                        params=params)
 
         return bool(response['result'])
@@ -123,17 +125,16 @@ callback – “Return”
         :param amount: Amount of the invoice in float. For example: 125.50
         :param asset: Cryptocurrency alphabetic code. Supported assets: “USDT”, “TON”, “BTC”, “ETH”, “LTC”, “BNB”, “TRX” and “USDC” (and “JET” for testnet).
         """
-        if not self.__token:
-            raise Exception('Не указан Token')
+
 
         url = f'{self.__base_url}/createCheck/'
 
         params = {
             "amount": amount,
-            "asset": asset
+            "asset": asset,
         }
 
-        response = await self._request("cryptoBot", "POST", url, headers=self.__headers,
+        response = await self._request(self.__payment_name, self.__post_method, url, headers=self.__headers,
                                        params=params)
 
         return Check(**response['result'])
@@ -144,16 +145,14 @@ callback – “Return”
         Docs: https://help.crypt.bot/crypto-pay-api#deleteCheck
 
         :param check_id: Check ID"""
-        if not self.__token:
-            raise Exception('Не указан Token')
 
         url = f'{self.__base_url}/deleteCheck/'
 
         params = {
-            "check_id": check_id
+            "check_id": check_id,
         }
 
-        response = await self._request("cryptoBot", "POST", url, headers=self.__headers,
+        response = await self._request(self.__payment_name, self.__post_method, url, headers=self.__headers,
                                        params=params)
 
         return bool(response['result'])
@@ -171,8 +170,6 @@ callback – “Return”
         :param comment: Optional. Comment for the transfer. Users will see this comment in the notification about the transfer. Up to 1024 symbols.
         :param disable_send_notification: Optional. Pass true to not send to the user the notification about the transfer. Defaults to false.
         """
-        if not self.__token:
-            raise Exception('Не указан Token')
 
         url = f'{self.__base_url}/transfer/'
 
@@ -182,16 +179,16 @@ callback – “Return”
             "amount": amount,
             "spend_id": spend_id,
             "comment": comment,
-            "disable_send_notification": disable_send_notification
+            "disable_send_notification": disable_send_notification,
         }
 
         for key, value in params.copy().items():
             if isinstance(value, bool):
                 params[key] = str(value).lower()
             if value is None:
-                del params[key]
+                params.pop(key)
 
-        response = await self._request("cryptoBot", "POST", url, headers=self.__headers,
+        response = await self._request(self.__payment_name, self.__post_method, url, headers=self.__headers,
                                        params=params)
 
         return Transfer(**response['result'])
@@ -210,8 +207,6 @@ callback – “Return”
         :param offset: Optional. Offset needed to return a specific subset of invoices. Defaults to 0.
         :param count: Optional. Number of invoices to be returned. Values between 1-1000 are accepted. Defaults to 100.
         """
-        if not self.__token:
-            raise Exception('Не указан Token')
 
         url = f"{self.__base_url}/getInvoices"
 
@@ -229,9 +224,9 @@ callback – “Return”
 
         for key, value in params.copy().items():
             if value is None:
-                del params[key]
+                params.pop(key)
 
-        response = await self._request("cryptoBot", "POST", url, headers=self.__headers,
+        response = await self._request(self.__payment_name, self.__post_method, url, headers=self.__headers,
                                        params=params)
 
         if len(response["result"]["items"]) > 0:
@@ -264,9 +259,9 @@ callback – “Return”
 
         for key, value in params.copy().items():
             if value is None:
-                del params[key]
+                params.pop(key)
 
-        response = await self._request("cryptoBot", "POST", url, headers=self.__headers,
+        response = await self._request(self.__payment_name, self.__post_method, url, headers=self.__headers,
                                        params=params)
 
         if len(response["result"]["items"]) > 0:
@@ -302,9 +297,9 @@ callback – “Return”
 
         for key, value in params.copy().items():
             if value is None:
-                del params[key]
+                params.pop(key)
 
-        response = await self._request("cryptoBot", "POST", url, headers=self.__headers,
+        response = await self._request(self.__payment_name, self.__post_method, url, headers=self.__headers,
                                        params=params)
 
         if len(response["result"]["items"]) > 0:
@@ -317,7 +312,7 @@ callback – “Return”
 
         Docs: https://help.crypt.bot/crypto-pay-api#getBalance"""
         url = f"{self.__base_url}/getBalance"
-        response = await self._request("cryptoBot", "POST", url, headers=self.__headers)
+        response = await self._request(self.__payment_name, self.__post_method, url, headers=self.__headers)
 
         return [Balance(**balance) for balance in response["result"]]
 
@@ -326,7 +321,7 @@ callback – “Return”
 
         Docs: https://help.crypt.bot/crypto-pay-api#getExchangeRates"""
         url = f"{self.__base_url}/getExchangeRates"
-        response = await self._request("cryptoBot", "POST", url, headers=self.__headers)
+        response = await self._request(self.__payment_name, self.__post_method, url, headers=self.__headers)
 
         return [ExchangeRate(**rate) for rate in response["result"]]
 
@@ -336,6 +331,6 @@ callback – “Return”
         Docs: https://help.crypt.bot/crypto-pay-api#getCurrencies"""
         url = f"{self.__base_url}/getCurrencies"
 
-        response = await self._request("cryptoBot", "POST", url, headers=self.__headers)
+        response = await self._request(self.__payment_name, self.__post_method, url, headers=self.__headers)
 
         return [Currency(**currency) for currency in response["result"]]

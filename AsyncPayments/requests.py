@@ -4,14 +4,14 @@ import certifi
 from typing import Optional
 from aiohttp import ClientSession, TCPConnector
 
-from .exceptions import BadRequest
+from .exceptions.exceptions import BadRequest, RequestError
 
 class RequestsClient:
 
     def __init__(self) -> None:
         self._session: Optional[ClientSession] = None
 
-    def _getsession(self):
+    def _getsession(self) -> ClientSession:
 
         if isinstance(self._session, ClientSession) and not self._session.closed:
             return self._session
@@ -32,8 +32,10 @@ class RequestsClient:
         session = self._getsession()
 
         async with session.request(method, url, **kwargs) as response:
-
-            response = await response.json()
+            if response.status == 200:
+                response = await response.json()
+            else:
+                raise RequestError(f"Response status: {response.status}. Text: {response.text()}")
 
         await self._session.close()
 
@@ -50,7 +52,7 @@ class RequestsClient:
         elif payment == "cryptoBot":
             if not response['ok']:
                 raise BadRequest("[CryptoBot] " + response['error']['name'])
-        elif payment == "lolz":
+        else:
             if response.get("error"):
                 raise BadRequest("[Lolzteam Market] " + response['error_description'])
             if response.get("errors"):

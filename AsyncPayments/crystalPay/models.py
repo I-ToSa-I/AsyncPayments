@@ -1,8 +1,7 @@
 from pydantic import BaseModel
-from typing import Union, Optional
+from typing import Optional
 
 
-# Balance
 class CassaInfo(BaseModel):
     id: int
     name: str
@@ -135,7 +134,6 @@ class Stats(BaseModel):
     payed_amount: float
     total_count: int
     payed_count: int
-
 
 class GeneralStats(BaseModel):
     incoming: Stats

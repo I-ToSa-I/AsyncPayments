@@ -1,10 +1,10 @@
-import hashlib
-from .models import *
-
-from typing import Optional, Union
+from AsyncPayments.requests import RequestsClient
+from models import Order, OrderMethod, WithdrawalMethod, CreateWithdrawalInfo, Withdrawal, Balance
+from typing import Optional, Union, List
 from urllib.parse import urlencode
 
-from AsyncPayments.requests import RequestsClient
+import hashlib
+
 
 class AsyncAaio(RequestsClient):
     API_HOST = "https://aaio.io"
@@ -26,8 +26,23 @@ class AsyncAaio(RequestsClient):
         self.__secret_key = secretkey
         self.__headers = {
             "Accept": "application/json",
-            "X-Api-Key": self.__api_key
+            "X-Api-Key": self.__api_key,
         }
+        self.__post_method = "POST"
+        self.__payment_name = "aaio"
+        self.check_values()
+
+    def check_values(self):
+        if not self.__secret_key or not self.__shop_id:
+            raise ValueError('No SecretKey or ShopID specified')
+
+    def __create_sign(self, amount: Union[float, int], currency: str, order_id: str) -> str:
+        params_for_sing = ':'.join(map(
+            str,
+            [self.__shop_id, amount, currency, self.__secret_key, order_id])
+        )
+
+        return hashlib.sha256(params_for_sing.encode('utf-8')).hexdigest()
 
     async def create_payment_url(
             self,
@@ -39,7 +54,7 @@ class AsyncAaio(RequestsClient):
             email: Optional[str] = None,
             lang: Optional[str] = None,
             referal: Optional[str] = None,
-            us_key: Optional[str] = None
+            us_key: Optional[str] = None,
     ) -> str:
 
         """Generate payment url.
@@ -56,9 +71,6 @@ class AsyncAaio(RequestsClient):
         :param referal: Referral code
         :param us_key: Parameter that you want to get in the notification"""
 
-        if not self.__secret_key or not self.__shop_id:
-            raise Exception('Не указан SecretKey или ShopID')
-
         params = {
             'merchant_id': self.__shop_id,
             'amount': amount,
@@ -69,21 +81,13 @@ class AsyncAaio(RequestsClient):
             'email': email,
             'lang': lang,
             'referal': referal,
-            'us_key': us_key
+            'us_key': us_key,
+            'sign': self.__create_sign(amount, currency, order_id),
         }
 
         for key, value in params.copy().items():
             if value is None:
-                del params[key]
-
-        params_for_sing = ':'.join(map(
-            str,
-            [self.__shop_id, amount, currency, self.__secret_key, order_id])
-        )
-
-        sign = hashlib.sha256(params_for_sing.encode('utf-8')).hexdigest()
-
-        params['sign'] = sign
+                params.pop(key)
 
         return f"{self.API_HOST}/merchant/pay?" + urlencode(params)
 
@@ -94,7 +98,7 @@ class AsyncAaio(RequestsClient):
 
         url = f'{self.API_HOST}/api/balance'
 
-        response = await self._request("aaio", "POST", url, headers=self.__headers)
+        response = await self._request(self.__payment_name, self.__post_method, url, headers=self.__headers)
 
         return Balance(**response)
 
@@ -108,27 +112,24 @@ class AsyncAaio(RequestsClient):
 
         :param order_id: OrderID (in your system)"""
 
-        if not self.__shop_id:
-            raise Exception('Не указан ShopID.')
-
         url = f'{self.API_HOST}/api/info-pay'
 
         params = {
             'merchant_id': self.__shop_id,
-            'order_id': order_id
+            'order_id': order_id,
         }
 
         for key, value in params.copy().items():
             if value is None:
-                del params[key]
+                params.pop(key)
 
-        response = await self._request("aaio", "POST", url, data=params, headers=self.__headers)
+        response = await self._request(self.__payment_name, self.__post_method, url, data=params, headers=self.__headers)
 
         return Order(**response)
 
     async def get_withdrawal_methods(self,
                                 method: Optional[str] = None
-                                ) -> Union[dict, WithdrawalMethod]:
+                                ) -> Union[List[WithdrawalMethod], WithdrawalMethod]:
 
         """Get available methods for withdrawal.
 
@@ -142,15 +143,15 @@ class AsyncAaio(RequestsClient):
 
         url = f'{self.API_HOST}/api/methods-payoff'
 
-        response = await self._request("aaio", "POST", url, headers=self.__headers)
+        response = await self._request(self.__payment_name, self.__post_method, url, headers=self.__headers)
 
         if method is not None:
             return WithdrawalMethod(**response['list'][method])
-        return response['list']
+        return [WithdrawalMethod(**method) for method in response["list"].values()]
 
     async def get_order_methods(self,
                            method: Optional[str] = None
-                           ) -> Union[dict, OrderMethod]:
+                           ) -> Union[List[OrderMethod], OrderMethod]:
 
         """Get available methods for order.
 
@@ -165,14 +166,14 @@ class AsyncAaio(RequestsClient):
         url = f'{self.API_HOST}/api/methods-pay'
 
         params = {
-            'merchant_id': self.__shop_id
+            'merchant_id': self.__shop_id,
         }
 
-        response = await self._request("aaio", "POST", url, data=params, headers=self.__headers)
+        response = await self._request(self.__payment_name, self.__post_method, url, data=params, headers=self.__headers)
 
         if method is not None:
             return OrderMethod.model_validate(response['list'][method])
-        return response['list']
+        return [OrderMethod(**method) for method in response["list"].values()]
 
     async def get_withdrawal_info(self,
                                 my_id: Union[int, str],
@@ -187,10 +188,10 @@ class AsyncAaio(RequestsClient):
         url = f'{self.API_HOST}/api/info-payoff'
 
         params = {
-            'my_id': my_id
+            'my_id': my_id,
         }
 
-        response = await self._request("aaio", "POST", url, data=params, headers=self.__headers)
+        response = await self._request(self.__payment_name, self.__post_method, url, data=params, headers=self.__headers)
 
         return Withdrawal(**response)
 
@@ -222,6 +223,6 @@ class AsyncAaio(RequestsClient):
             'commission_type': commission_type,
         }
 
-        response = await self._request("aaio", "POST", url, data=params, headers=self.__headers)
+        response = await self._request(self.__payment_name, self.__post_method, url, data=params, headers=self.__headers)
 
         return CreateWithdrawalInfo(**response)

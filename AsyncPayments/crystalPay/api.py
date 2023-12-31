@@ -1,9 +1,11 @@
+from AsyncPayments.requests import RequestsClient
+from typing import Optional, Union
+from models import CreatePayment, CassaInfo, PayoffCreate, Balances, TickersRate, PaymentsMethods, PayoffRequest, \
+                    PaymentInfo, GeneralStats
+
 import json
 import hashlib
 
-from typing import Optional
-from AsyncPayments.requests import RequestsClient
-from .models import *
 
 
 class AsyncCrystalPay(RequestsClient):
@@ -21,9 +23,16 @@ class AsyncCrystalPay(RequestsClient):
         self.__secret = secret
         self.__salt = salt
         self.__headers = {
-            'Content-Type': 'application/json'
+            'Content-Type': 'application/json',
         }
         self.__base_url = "https://api.crystalpay.io/v2"
+        self.__post_method = "POST"
+        self.__payment_name = "crystalPay"
+        self.check_values()
+
+    def check_values(self):
+        if not self.__login or not self.__secret or not self.__salt:
+            raise ValueError('No Secret, Login or Salt specified')
 
     async def get_cassa_info(self, hide_empty: Optional[bool]= False) -> CassaInfo:
         """Get cash info.
@@ -32,17 +41,14 @@ class AsyncCrystalPay(RequestsClient):
 
         :param hide_empty: Hide empty balances"""
 
-        if not self.__login or not self.__secret:
-            raise Exception('Не указан Secret или Login')
-
         url = f'{self.__base_url}/me/info/'
 
         params = {
             "auth_login": self.__login,
             "auth_secret": self.__secret,
-            "hide_empty": hide_empty
+            "hide_empty": hide_empty,
         }
-        response = await self._request("crystalPay", "POST", url, headers=self.__headers, data=json.dumps(params))
+        response = await self._request(self.__payment_name, self.__post_method, url, headers=self.__headers, data=json.dumps(params))
 
         return CassaInfo(**response)
 
@@ -51,16 +57,13 @@ class AsyncCrystalPay(RequestsClient):
 
         Docs: https://docs.crystalpay.io/api/balans/poluchenie-balansa-kassy"""
 
-        if not self.__login or not self.__secret:
-            raise Exception('Не указан Secret или Login')
-
         url = f'{self.__base_url}/balance/info/'
 
         params = {
             "auth_login": self.__login,
             "auth_secret": self.__secret,
         }
-        response = await self._request("crystalPay", "POST", url, headers=self.__headers, data=json.dumps(params))
+        response = await self._request(self.__payment_name, self.__post_method, url, headers=self.__headers, data=json.dumps(params))
 
         return Balances(**response['balances'])
 
@@ -69,16 +72,13 @@ class AsyncCrystalPay(RequestsClient):
 
         Docs: https://docs.crystalpay.io/api/metody-oplaty/poluchenie-informacii-o-metodakh-oplaty"""
 
-        if not self.__login or not self.__secret:
-            raise Exception('Не указан Secret или Login')
-
         url = f'{self.__base_url}/method/list/'
 
         params = {
             "auth_login": self.__login,
             "auth_secret": self.__secret,
         }
-        response = await self._request("crystalPay", "POST", url, headers=self.__headers, data=json.dumps(params))
+        response = await self._request(self.__payment_name, self.__post_method, url, headers=self.__headers, data=json.dumps(params))
 
         return PaymentsMethods(**response['methods'])
 
@@ -94,9 +94,6 @@ class AsyncCrystalPay(RequestsClient):
         :return: True if successful, else exception BadRequest
         """
 
-        if not self.__login or not self.__secret:
-            raise Exception('Не указан Secret или Login')
-
         url = f'{self.__base_url}/method/edit/'
 
         params = {
@@ -104,10 +101,10 @@ class AsyncCrystalPay(RequestsClient):
             "auth_secret": self.__secret,
             "method": method,
             "extra_commission_percent": extra_commission_percent,
-            "enabled": enabled
+            "enabled": enabled,
         }
 
-        await self._request("crystalPay", "POST", url, headers=self.__headers, data=json.dumps(params))
+        await self._request(self.__payment_name, self.__post_method, url, headers=self.__headers, data=json.dumps(params))
 
         return True
 
@@ -133,9 +130,6 @@ class AsyncCrystalPay(RequestsClient):
 
         url = f'{self.__base_url}/invoice/create/'
 
-        if not self.__login or not self.__secret:
-            raise Exception('Не указан Secret или Login')
-
         params = {
             "auth_login": self.__login,
             "auth_secret": self.__secret,
@@ -150,7 +144,7 @@ class AsyncCrystalPay(RequestsClient):
             "payer_details": payer_details,
             "lifetime": lifetime,
         }
-        response = await self._request("crystalPay", "POST", url, headers=self.__headers, data=json.dumps(params))
+        response = await self._request(self.__payment_name, self.__post_method, url, headers=self.__headers, data=json.dumps(params))
 
         return CreatePayment(**response)
 
@@ -163,15 +157,12 @@ class AsyncCrystalPay(RequestsClient):
 
         url = f'{self.__base_url}/invoice/info/'
 
-        if not self.__login or not self.__secret:
-            raise Exception('Не указан Secret или Login')
-
         params = {
             "auth_login": self.__login,
             "auth_secret": self.__secret,
-            "id": invoice_id
+            "id": invoice_id,
         }
-        response = await self._request("crystalPay", "POST", url, headers=self.__headers, data=json.dumps(params))
+        response = await self._request(self.__payment_name, self.__post_method, url, headers=self.__headers, data=json.dumps(params))
 
         return PaymentInfo(**response)
 
@@ -195,9 +186,6 @@ class AsyncCrystalPay(RequestsClient):
         amount - The commission will be deducted from the withdrawal amount. The amount will be credited to your wallet.
         balance - The commission will be deducted from the balance. The exact amount will be sent to your wallet."""
 
-        if not self.__login or not self.__secret or not self.__salt:
-            raise Exception('Не указан Secret, Login или Salt')
-
         url = f'{self.__base_url}/payoff/create/'
 
         signature = hashlib.sha1(str.encode(f"{amount}:{method}:{wallet}:{self.__salt}")).hexdigest()
@@ -212,9 +200,9 @@ class AsyncCrystalPay(RequestsClient):
             "wallet": wallet,
             "subtract_from": subtract_from,
             "callback_url": callback_url,
-            "extra": extra
+            "extra": extra,
         }
-        response = await self._request("crystalPay", "POST", url, headers=self.__headers, data=json.dumps(params))
+        response = await self._request(self.__payment_name, self.__post_method, url, headers=self.__headers, data=json.dumps(params))
 
         return PayoffCreate(**response)
 
@@ -225,9 +213,6 @@ class AsyncCrystalPay(RequestsClient):
 
         :param payoff_id: Payoff ID"""
 
-        if not self.__login or not self.__secret or not self.__salt:
-            raise Exception('Не указан Secret, Login или Salt')
-
         signature = hashlib.sha1(str.encode(f"{payoff_id}:{self.__salt}")).hexdigest()
 
         url = f"{self.__base_url}/payoff/submit/"
@@ -236,10 +221,10 @@ class AsyncCrystalPay(RequestsClient):
             "auth_login": self.__login,
             "auth_secret": self.__secret,
             "signature": signature,
-            "id": payoff_id
+            "id": payoff_id,
         }
 
-        response = await self._request("crystalPay", "POST", url, headers=self.__headers, data=json.dumps(params))
+        response = await self._request(self.__payment_name, self.__post_method, url, headers=self.__headers, data=json.dumps(params))
 
         return PayoffRequest(**response)
 
@@ -251,9 +236,6 @@ class AsyncCrystalPay(RequestsClient):
 
         :param payoff_id: Payoff ID"""
 
-        if not self.__login or not self.__secret or not self.__salt:
-            raise Exception('Не указан Secret, Login или Salt')
-
         signature = hashlib.sha1(str.encode(f"{payoff_id}:{self.__salt}")).hexdigest()
 
         url = f"{self.__base_url}/payoff/cancel/"
@@ -262,10 +244,10 @@ class AsyncCrystalPay(RequestsClient):
             "auth_login": self.__login,
             "auth_secret": self.__secret,
             "signature": signature,
-            "id": payoff_id
+            "id": payoff_id,
         }
 
-        response = await self._request("crystalPay", "POST", url, headers=self.__headers, data=json.dumps(params))
+        response = await self._request(self.__payment_name, self.__post_method, url, headers=self.__headers, data=json.dumps(params))
 
         return PayoffRequest(**response)
 
@@ -276,18 +258,15 @@ class AsyncCrystalPay(RequestsClient):
 
         :param payoff_id: Payoff ID"""
 
-        if not self.__login or not self.__secret:
-            raise Exception('Не указан Secret или Login')
-
         url = f"{self.__base_url}/payoff/info/"
 
         params = {
             "auth_login": self.__login,
             "auth_secret": self.__secret,
-            "id": payoff_id
+            "id": payoff_id,
         }
 
-        response = await self._request("crystalPay", "POST", url, headers=self.__headers, data=json.dumps(params))
+        response = await self._request(self.__payment_name, self.__post_method, url, headers=self.__headers, data=json.dumps(params))
 
         return PayoffRequest(**response)
 
@@ -296,17 +275,14 @@ class AsyncCrystalPay(RequestsClient):
 
         Dosc: https://docs.crystalpay.io/api/valyuty/poluchenie-spiska-dostupnykh-valyut"""
 
-        if not self.__login or not self.__secret:
-            raise Exception('Не указан Secret или Login')
-
         url = f"{self.__base_url}/ticker/list/"
 
         params = {
             "auth_login": self.__login,
-            "auth_secret": self.__secret
+            "auth_secret": self.__secret,
         }
 
-        response = await self._request("crystalPay", "POST", url, headers=self.__headers, data=json.dumps(params))
+        response = await self._request(self.__payment_name, self.__post_method, url, headers=self.__headers, data=json.dumps(params))
 
         return list(response['tickers'])
 
@@ -317,18 +293,15 @@ class AsyncCrystalPay(RequestsClient):
 
         :param tickers: Array of currencies, for example: [“BTC”, “LTC”]"""
 
-        if not self.__login or not self.__secret:
-            raise Exception('Не указан Secret или Login')
-
         url = f"{self.__base_url}/ticker/get/"
 
         params = {
             "auth_login": self.__login,
             "auth_secret": self.__secret,
-            "tickers": tickers
+            "tickers": tickers,
         }
 
-        response = await self._request("crystalPay", "POST", url, headers=self.__headers, data=json.dumps(params))
+        response = await self._request(self.__payment_name, self.__post_method, url, headers=self.__headers, data=json.dumps(params))
 
         return TickersRate(**response)
 
@@ -340,19 +313,16 @@ class AsyncCrystalPay(RequestsClient):
         :param page: Page number, for example: 1, 2, 3
         :param items: Number of elements per page, maximum - 100"""
 
-        if not self.__login or not self.__secret:
-            raise Exception('Не указан Secret или Login')
-
         url = f"{self.__base_url}/history/payments/"
 
         params = {
             "auth_login": self.__login,
             "auth_secret": self.__secret,
             "page": page,
-            "items": items
+            "items": items,
         }
 
-        response = await self._request("crystalPay", "POST", url, headers=self.__headers, data=json.dumps(params))
+        response = await self._request(self.__payment_name, self.__post_method, url, headers=self.__headers, data=json.dumps(params))
 
         return list(response['payments'])
 
@@ -364,19 +334,16 @@ class AsyncCrystalPay(RequestsClient):
         :param page: Page number, for example: 1, 2, 3
         :param items: Number of elements per page, maximum - 100"""
 
-        if not self.__login or not self.__secret:
-            raise Exception('Не указан Secret или Login')
-
         url = f"{self.__base_url}/history/payoffs/"
 
         params = {
             "auth_login": self.__login,
             "auth_secret": self.__secret,
             "page": page,
-            "items": items
+            "items": items,
         }
 
-        response = await self._request("crystalPay", "POST", url, headers=self.__headers, data=json.dumps(params))
+        response = await self._request(self.__payment_name, self.__post_method, url, headers=self.__headers, data=json.dumps(params))
 
         return list(response['payoffs'])
 
@@ -385,16 +352,13 @@ class AsyncCrystalPay(RequestsClient):
 
         Dosc: https://docs.crystalpay.io/api/otchyoty/poluchenie-obshei-statistiki"""
 
-        if not self.__login or not self.__secret:
-            raise Exception('Не указан Secret или Login')
-
         url = f"{self.__base_url}/history/summary/"
 
         params = {
             "auth_login": self.__login,
-            "auth_secret": self.__secret
+            "auth_secret": self.__secret,
         }
 
-        response = await self._request("crystalPay", "POST", url, headers=self.__headers, data=json.dumps(params))
+        response = await self._request(self.__payment_name, self.__post_method, url, headers=self.__headers, data=json.dumps(params))
 
         return GeneralStats(**response)

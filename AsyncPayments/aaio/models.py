@@ -1,33 +1,30 @@
 from pydantic import BaseModel
-from typing import Union
+from typing import Union, Optional
 
 
-# Balance
 class Balance(BaseModel):
     balance: float
     referral: float
     hold: float
 
-
-# Orders
 class Order(BaseModel):
     id: str
     order_id: Union[int, str]
     desc: str
     merchant_id: str
     merchant_domain: str
-    method: str = None
+    method: Optional[str] = None
     amount: float
     currency: str
-    profit: float = None
-    commission: float = None
-    commission_client: float = None
-    commission_type: str = None
-    email: str = None
+    profit: Optional[float] = None
+    commission: Optional[float] = None
+    commission_client: Optional[float] = None
+    commission_type: Optional[str] = None
+    email: Optional[str] = None
     status: str
     date: str
     expired_date: str
-    complete_date: str = None
+    complete_date: Optional[str] = None
     us_vars: dict
 
 class OrderMethodCurrencies(BaseModel):
@@ -37,12 +34,11 @@ class OrderMethodCurrencies(BaseModel):
     EUR: float
 
 class OrderMethod(BaseModel):
+    name: str
     min: OrderMethodCurrencies
     max: OrderMethodCurrencies
     commission_percent: float
 
-
-# Withdrawals
 class Withdrawal(BaseModel):
     id: str
     my_id: Union[int, str]
@@ -53,12 +49,12 @@ class Withdrawal(BaseModel):
     commission: float
     commission_type: int
     status: str
-    cancel_message: str = None
+    cancel_message: Optional[str] = None
     date: str
-    complete_date: str = None
-
+    complete_date: Optional[str] = None
 
 class WithdrawalMethod(BaseModel):
+    name: str
     min: float
     max: float
     commission_percent: float
