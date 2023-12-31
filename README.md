@@ -12,7 +12,7 @@ from AsyncPayments.aaio import AsyncAaio
 from AsyncPayments.cryptoBot import AsyncCryptoBot
 from AsyncPayments.crystalPay import AsyncCrystalPay
 
-lolz = AsyncLolzteamMarketPayment("Token", 1, "UserNickname")
+lolz = AsyncLolzteamMarketPayment("Token", 1, "UserNickname") # 1 - UserID
 aaio = AsyncAaio("ApiKey", "ShopId", "SecretKey")
 cryptoBot = AsyncCryptoBot("Token")
 crystalPay = AsyncCrystalPay("Login", "Secret", "Salt")
