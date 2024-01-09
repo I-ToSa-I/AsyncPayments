@@ -1,11 +1,11 @@
 from AsyncPayments.requests import RequestsClient
 from typing import Optional, Union, List
 
-from models import Invoice, MeInfo, Transfer, Balance, Check, ExchangeRate, Currency
+from .models import Invoice, MeInfo, Transfer, Balance, Check, ExchangeRate, Currency
 
 
 class AsyncCryptoBot(RequestsClient):
-    API_HOST = "https://t.me/Cryptobot"
+    API_HOST: str = "https://t.me/Cryptobot"
 
     def __init__(self, token: str) -> None:
         """

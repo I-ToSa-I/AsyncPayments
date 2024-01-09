@@ -1,28 +1,36 @@
 # AsyncPayments
 > Add payment acceptance to your projects.
 ## Installing
-
     pip install AsyncPayments
+## Version
+    v1.3.0
 ## Code example
 ```python
 import asyncio
 
+from AsyncPayments.ruKassa import AsyncRuKassa
 from AsyncPayments.lolz import AsyncLolzteamMarketPayment
 from AsyncPayments.aaio import AsyncAaio
 from AsyncPayments.cryptoBot import AsyncCryptoBot
 from AsyncPayments.crystalPay import AsyncCrystalPay
 
-lolz = AsyncLolzteamMarketPayment("Token", 1, "UserNickname")
+ruKassa = AsyncRuKassa("Api-Token", 1, "Email", "Password") # 1 - ShopID
+lolz = AsyncLolzteamMarketPayment("Token", 1, "UserNickname") # 1 - UserID
 aaio = AsyncAaio("ApiKey", "ShopId", "SecretKey")
 cryptoBot = AsyncCryptoBot("Token")
 crystalPay = AsyncCrystalPay("Login", "Secret", "Salt")
 
 async def main():
+    balance_rukassa = await ruKassa.get_balance()
     balance_lolz = await lolz.get_me()
     balance_aaio = await aaio.get_balance()
     balance_crypto_bot = await cryptoBot.get_balance()
     balance_crystal_pay = await crystalPay.get_balance()
     
+    print("RuKassa:")
+    print("RUB: ", balance_rukassa.balance_rub)
+    print("USD: ", balance_rukassa.balance_usd)
+    print('--------------')
     print("Lolz:")
     print('ID: ', balance_lolz.user_id)
     print('Никнейм: ', balance_lolz.username)
@@ -43,12 +51,14 @@ async def main():
         print(f"Доступно {currency}:", balance.amount, f" {balance.currency}")
     
     print('------------------------------------------')
-        
+    
+    order_ruKassa = await ruKassa.create_payment(15)
     order_lolz = lolz.get_payment_link(15, comment="orderId")
     order_aaio = await aaio.create_payment_url(15, "orderId")
     order_crypto_bot = await cryptoBot.create_invoice(15, currency_type="crypto", asset="USDT")
     order_crystal_pay = await crystalPay.create_payment(15)
-
+    
+    print("RuKassa: ", order_ruKassa.url)
     print('Lolz: ', order_lolz)
     print('Aaio: ', order_aaio)
     print('CryptoBot: ', order_crypto_bot.pay_url)
@@ -56,13 +66,18 @@ async def main():
     
     print('------------------------------------------')
     
-    info_lolz = await lolz.check_status_payment(15, "orderId")
+    info_ruKassa = await ruKassa.get_info_payment("orderId")
+    info_lolz = await lolz.check_status_payment(50, "orderId")
     info_aaio = await aaio.get_order_info("orderId")
     info_crypto_bot = await cryptoBot.get_invoices(
         invoice_ids=["orderId"], count=1
     )
     info_crystal_pay = await crystalPay.get_payment_info("orderId")
     
+    print('RuKassa:')
+    print("Сумма: ", info_ruKassa.amount)
+    print("Статус: ", info_ruKassa.status)
+    print('--------------')
     print("Lolz:")
     print("Сумма: ", 15)
     print("Статус: ", info_lolz)
@@ -84,7 +99,10 @@ asyncio.run(main())
 ```
 ## Output
 ```Python
-
+RuKassa:
+RUB:  34.0
+USD:  234.1
+--------------
 Lolz:
 ID:  4810752
 Никнейм:  ToSa
@@ -133,11 +151,16 @@ CrystalPay:
 Доступно USDTCRYPTOBOT: 0.144637  USDT
 Доступно USDTTRC: 0.0  USDT
 ------------------------------------------
+RuKassa:  https://pay.ruks.pro/?hash=435fc3cee737f9dac2b34c9ba9311eae
 Lolz:  https://lzt.market/balance/transfer?username=ToSa&hold=0&amount=15&comment=orderId
 Aaio:  https://aaio.io/merchant/pay?merchant_id=f398c75d-b775-412c-9674-87939692c083&amount=15&order_id=orderId&currency=RUB&sign=6ad5dc2164059a255921ad216c7e5ffd0d2abcaec9af7415636fc12df938582f
 CryptoBot:  https://t.me/CryptoBot?start=IVYOJWPOZh15
 CrystalPay:  https://pay.crystalpay.io/?i=715297022_MxRoixNnSrMSBD
 ------------------------------------------
+RuKassa:
+Сумма:  50
+Статус:  WAIT
+--------------
 Lolz:
 Сумма:  15
 Статус:  False
@@ -160,7 +183,8 @@ CrystalPay:
 > Lolzteam Market: https://lzt-market.readme.io/reference/ <br>
 > Aaio: https://wiki.aaio.io <br>
 > CryptoBot: https://help.crypt.bot/crypto-pay-api <br>
-> CrystalPay: https://docs.crystalpay.io
+> CrystalPay: https://docs.crystalpay.io <br>
+> RuKassa: https://lk.rukassa.is/api/v1 <br>
 
 ## Developer Links
 > Zelenka (Lolzteam): https://zelenka.guru/tosa <br>

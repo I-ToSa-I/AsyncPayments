@@ -1,6 +1,6 @@
 from AsyncPayments.requests import RequestsClient
 from typing import Optional, Union
-from models import User, Payments
+from .models import User, Payments
 
 import json
 import random
@@ -10,7 +10,7 @@ import secrets
 
 
 class AsyncLolzteamMarketPayment(RequestsClient):
-    API_HOST = "https://lzt.market"
+    API_HOST: str = "https://lzt.market"
 
     def __init__(self, token: str, user_id: int, user_nickname: str) -> None:
         """

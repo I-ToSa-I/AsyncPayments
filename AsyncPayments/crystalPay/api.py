@@ -1,6 +1,6 @@
 from AsyncPayments.requests import RequestsClient
 from typing import Optional, Union
-from models import CreatePayment, CassaInfo, PayoffCreate, Balances, TickersRate, PaymentsMethods, PayoffRequest, \
+from .models import CreatePayment, CassaInfo, PayoffCreate, Balances, TickersRate, PaymentsMethods, PayoffRequest, \
                     PaymentInfo, GeneralStats
 
 import json
@@ -9,7 +9,7 @@ import hashlib
 
 
 class AsyncCrystalPay(RequestsClient):
-    API_HOST = "https://crystalpay.io"
+    API_HOST: str = "https://crystalpay.io"
 
     def __init__(self, login: str, secret: str, salt: str) -> None:
         """

@@ -1,5 +1,5 @@
 from AsyncPayments.requests import RequestsClient
-from models import Order, OrderMethod, WithdrawalMethod, CreateWithdrawalInfo, Withdrawal, Balance
+from .models import Order, OrderMethod, WithdrawalMethod, CreateWithdrawalInfo, Withdrawal, Balance
 from typing import Optional, Union, List
 from urllib.parse import urlencode
 
@@ -7,7 +7,7 @@ import hashlib
 
 
 class AsyncAaio(RequestsClient):
-    API_HOST = "https://aaio.io"
+    API_HOST: str = "https://aaio.io"
 
     def __init__(self,
             apikey: str,

@@ -33,9 +33,12 @@ class RequestsClient:
 
         async with session.request(method, url, **kwargs) as response:
             if response.status == 200:
-                response = await response.json()
+                if payment in ['ruKassa']:
+                    response = await response.json(content_type="text/html")
+                else:
+                    response = await response.json()
             else:
-                raise RequestError(f"Response status: {response.status}. Text: {response.text()}")
+                raise RequestError(f"Response status: {response.status}. Text: {await response.text()}")
 
         await self._session.close()
 
@@ -52,10 +55,16 @@ class RequestsClient:
         elif payment == "cryptoBot":
             if not response['ok']:
                 raise BadRequest("[CryptoBot] " + response['error']['name'])
-        else:
+        elif payment == "lolz":
             if response.get("error"):
                 raise BadRequest("[Lolzteam Market] " + response['error_description'])
             if response.get("errors"):
                 raise BadRequest("[Lolzteam Market] " + response['errors'][0])
+        elif payment == "ruKassa":
+            if response.get("error"):
+                raise BadRequest("[RuKassa] " + response['message'])
+        else:
+            if response['type'] == "error":
+                raise BadRequest("[FreeKassa] " + response['message'])
 
         return response
