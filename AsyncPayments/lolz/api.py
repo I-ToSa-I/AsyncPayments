@@ -29,7 +29,7 @@ class AsyncLolzteamMarketPayment(RequestsClient):
         }
         self.__base_url = "https://api.lzt.market"
         self.__get_method = "GET"
-        self.__payment_name = "crystalPay"
+        self.__payment_name = "lolz"
         self.check_values()
 
     def check_values(self):

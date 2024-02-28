@@ -3,7 +3,7 @@
 ## Installing
     pip install AsyncPayments
 ## Version
-    v1.3.0
+    v1.4.0
 ## Code example
 ```python
 import asyncio
