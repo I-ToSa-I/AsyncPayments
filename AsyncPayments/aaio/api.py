@@ -7,7 +7,7 @@ import hashlib
 
 
 class AsyncAaio(RequestsClient):
-    API_HOST: str = "https://aaio.io"
+    API_HOST: str = "https://aaio.so"
 
     def __init__(self,
             apikey: str,
@@ -59,7 +59,7 @@ class AsyncAaio(RequestsClient):
 
         """Generate payment url.
 
-        Docs: https://wiki.aaio.io/priem-platezhei/sozdanie-zakaza
+        Docs: https://wiki.aaio.so/priem-platezhei/sozdanie-zakaza
 
         :param amount: Order amount.
         :param order_id: Order number, which unique in your system, up to 16 characters, without spaces (aA-zZ, 0-9, :, -, _, [, ] , |)
@@ -94,7 +94,7 @@ class AsyncAaio(RequestsClient):
     async def get_balance(self) -> Balance:
         """Get available, referal and hold balance.
 
-        Docs: https://wiki.aaio.io/api/poluchenie-balansa"""
+        Docs: https://wiki.aaio.so/api/poluchenie-balansa"""
 
         url = f'{self.API_HOST}/api/balance'
 
@@ -108,7 +108,7 @@ class AsyncAaio(RequestsClient):
 
         """Get information about an order by OrderID.
 
-        Docs: https://wiki.aaio.io/api/informaciya-o-zakaze
+        Docs: https://wiki.aaio.so/api/informaciya-o-zakaze
 
         :param order_id: OrderID (in your system)"""
 
@@ -137,7 +137,7 @@ class AsyncAaio(RequestsClient):
 
         If a specific method -> return info about only this method.
 
-        Docs: https://wiki.aaio.io/api/dostupnye-metody-dlya-vyvoda-sredstv
+        Docs: https://wiki.aaio.so/api/dostupnye-metody-dlya-vyvoda-sredstv
 
         :param method: Specific method. Default is None"""
 
@@ -159,7 +159,7 @@ class AsyncAaio(RequestsClient):
 
         If a specific method -> return info about only this method.
 
-        Docs: https://wiki.aaio.io/api/dostupnye-metody-dlya-sozdaniya-zakaza
+        Docs: https://wiki.aaio.so/api/dostupnye-metody-dlya-sozdaniya-zakaza
 
         :param method: Specific method. Default is None"""
 
@@ -181,7 +181,7 @@ class AsyncAaio(RequestsClient):
 
         """Get information about a withdrawal by WithdrawalID.
 
-        Docs: https://wiki.aaio.io/api/informaciya-o-zayavke-na-vyvod-sredstv
+        Docs: https://wiki.aaio.so/api/informaciya-o-zayavke-na-vyvod-sredstv
 
         :param my_id: WithdrawalID (in your system)"""
 
@@ -205,7 +205,7 @@ class AsyncAaio(RequestsClient):
 
         """Create withdrawal.
 
-        Docs: https://wiki.aaio.io/api/vyvod-sredstv
+        Docs: https://wiki.aaio.so/api/vyvod-sredstv
 
         :param my_id: WithdrawalID (in your system)
         :param method: Specific method for withdrawal
