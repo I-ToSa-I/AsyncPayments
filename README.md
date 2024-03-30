@@ -3,7 +3,7 @@
 ## Installing
     pip install AsyncPayments
 ## Version
-    v1.4.1
+    v1.4.2
 ## Code example
 ```python
 import asyncio
@@ -15,7 +15,7 @@ from AsyncPayments.cryptoBot import AsyncCryptoBot
 from AsyncPayments.crystalPay import AsyncCrystalPay
 
 ruKassa = AsyncRuKassa("Api-Token", 1, "Email", "Password") # 1 - ShopID
-lolz = AsyncLolzteamMarketPayment("Token", 1, "UserNickname") # 1 - UserID
+lolz = AsyncLolzteamMarketPayment("Token")
 aaio = AsyncAaio("ApiKey", "ShopId", "SecretKey")
 cryptoBot = AsyncCryptoBot("Token")
 crystalPay = AsyncCrystalPay("Login", "Secret", "Salt")
@@ -152,7 +152,7 @@ CrystalPay:
 Доступно USDTTRC: 0.0  USDT
 ------------------------------------------
 RuKassa:  https://pay.ruks.pro/?hash=435fc3cee737f9dac2b34c9ba9311eae
-Lolz:  https://lzt.market/balance/transfer?username=ToSa&hold=0&amount=15&comment=orderId
+Lolz:  https://lzt.market/balance/transfer?user_id=4810752&hold=0&amount=15&comment=orderId
 Aaio:  https://aaio.io/merchant/pay?merchant_id=f398c75d-b775-412c-9674-87939692c083&amount=15&order_id=orderId&currency=RUB&sign=6ad5dc2164059a255921ad216c7e5ffd0d2abcaec9af7415636fc12df938582f
 CryptoBot:  https://t.me/CryptoBot?start=IVYOJWPOZh15
 CrystalPay:  https://pay.crystalpay.io/?i=715297022_MxRoixNnSrMSBD
