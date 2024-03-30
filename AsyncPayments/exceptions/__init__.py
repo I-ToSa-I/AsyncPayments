@@ -1,1 +1,1 @@
-from .exceptions import BadRequest
+from .exceptions import BadRequest, RequestError, MissingScopeError

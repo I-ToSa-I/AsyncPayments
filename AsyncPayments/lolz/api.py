@@ -1,6 +1,7 @@
 from AsyncPayments.requests import RequestsClient
 from typing import Optional, Union
 from .models import User, Payments
+from AsyncPayments.exceptions import MissingScopeError
 
 import json
 import random
@@ -20,9 +21,15 @@ class AsyncLolzteamMarketPayment(RequestsClient):
         """
         super().__init__()
         self.__token = token
-        self.__user_id = json.loads(
+        jwt_payload = json.loads(
             base64.b64decode(token.split(".")[1] + "==").decode("utf-8")
-        )["sub"]
+        )
+        self.__user_id = jwt_payload["sub"]
+        if jwt_payload.get("scope"):
+            if "market" not in jwt_payload["scope"]:
+                raise MissingScopeError(
+                    '"Market" scope is not provided in your token. You need to recreate token with "Market" scope.'
+                )
         self.__headers = {
             "Authorization": f"Bearer {self.__token}",
             "Accept": "application/json",
@@ -137,10 +144,7 @@ class AsyncLolzteamMarketPayment(RequestsClient):
             headers=self.__headers,
             params=params,
         )
-        if (
-            type(response.get("payments")) is list
-            and len(response.get("payments")) == 0
-        ):
+        if type(response.get("payments")) is list and len(response.get("payments")) == 0:
             response["payments"] = {}
         return Payments(**response)
 
