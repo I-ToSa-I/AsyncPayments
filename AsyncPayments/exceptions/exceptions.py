@@ -5,3 +5,6 @@ class BadRequest(Exception):
 class RequestError(Exception):
     pass
 
+
+class MissingScopeError(Exception):
+    pass

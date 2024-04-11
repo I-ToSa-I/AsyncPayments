@@ -1,58 +1,66 @@
 from AsyncPayments.requests import RequestsClient
 from typing import Optional, Union
 from .models import User, Payments
+from AsyncPayments.exceptions import MissingScopeError
 
 import json
 import random
 import math
 import time
 import secrets
+import base64
 
 
 class AsyncLolzteamMarketPayment(RequestsClient):
     API_HOST: str = "https://lzt.market"
 
-    def __init__(self, token: str, user_id: int, user_nickname: str) -> None:
+    def __init__(self, token: str) -> None:
         """
         Initialize LolzteamMarket API client
         :param token: Your Lolzteam Token
-        :param user_id: Your Lolzteam User ID
-        :param user_nickname: Your Lolzteam User nickname
         """
         super().__init__()
         self.__token = token
-        self.__user_id = user_id
-        self.__nickname = user_nickname
+        jwt_payload = json.loads(
+            base64.b64decode(token.split(".")[1] + "==").decode("utf-8")
+        )
+        self.__user_id = jwt_payload["sub"]
+        if jwt_payload.get("scope"):
+            if "market" not in jwt_payload["scope"]:
+                raise MissingScopeError(
+                    '"Market" scope is not provided in your token. You need to recreate token with "Market" scope.'
+                )
         self.__headers = {
-            'Authorization': f'Bearer {self.__token}',
-            "Accept": "application/json"
+            "Authorization": f"Bearer {self.__token}",
+            "Accept": "application/json",
         }
         self.__base_url = "https://api.lzt.market"
         self.__get_method = "GET"
         self.__payment_name = "lolz"
-        self.check_values()
-
-    def check_values(self):
-        if not self.__token or not self.__user_id or not self.__nickname:
-            raise ValueError('No Token, UserID or Nickname specified')
 
     async def get_me(self) -> User:
         """Get info about your account on Zelenka (Lolzteam).
 
         Docs: https://lzt-market.readme.io/reference/marketprofilesettingsgetinfo"""
 
-        url = f'{self.__base_url}/me'
+        url = f"{self.__base_url}/me"
 
+        response = await self._request(
+            self.__payment_name, self.__get_method, url, headers=self.__headers
+        )
 
-        response = await self._request(self.__payment_name, self.__get_method, url, headers=self.__headers)
-
-        return User(**response['user'])
+        return User(**response["user"])
 
     def __get_random_string(self):
-        return f'{time.time()}_{secrets.token_hex(random.randint(5, 10))}'
+        return f"{time.time()}_{secrets.token_hex(random.randint(5, 10))}"
 
-    def get_payment_link(self, amount: Union[int, float], comment: Optional[str] = None, is_hold: Optional[bool] = False,
-                         is_amount_ceiling: Optional[bool] = False) -> str:
+    def get_payment_link(
+        self,
+        amount: Union[int, float],
+        comment: Optional[str] = None,
+        is_hold: Optional[bool] = False,
+        is_amount_ceiling: Optional[bool] = False,
+    ) -> str:
         """Get a link to transfer funds to the Lolzteam market.
 
         :param amount: Amount to transfer
@@ -68,16 +76,24 @@ class AsyncLolzteamMarketPayment(RequestsClient):
         if not comment:
             comment = self.__get_random_string()
 
-        return f'https://lzt.market/balance/transfer?username={self.__nickname}&hold={int(is_hold)}&amount={amount}&comment={comment}'
+        return f"https://lzt.market/balance/transfer?user_id={self.__user_id}&hold={int(is_hold)}&amount={amount}&comment={comment}"
 
-    async def get_history_payments(self, type: Optional[str] = None, pmin: Optional[int] = None,
-                                   pmax: Optional[int] = None, page: Optional[int] = 1,
-                                   operation_id_lt: Optional[int] = None, receiver: Optional[str] = None,
-                                   sender: Optional[str] = None, startDate: Optional[str] = None,
-                                   endDate: Optional[str] = None, wallet: Optional[str] = None,
-                                   comment: Optional[str] = None, is_hold: Optional[bool] = None,
-                                   show_payment_stats: Optional[bool] = None
-                                   ) -> Payments:
+    async def get_history_payments(
+        self,
+        operation_type: Optional[str] = None,
+        pmin: Optional[int] = None,
+        pmax: Optional[int] = None,
+        page: Optional[int] = 1,
+        operation_id_lt: Optional[int] = None,
+        receiver: Optional[str] = None,
+        sender: Optional[str] = None,
+        startDate: Optional[str] = None,
+        endDate: Optional[str] = None,
+        wallet: Optional[str] = None,
+        comment: Optional[str] = None,
+        is_hold: Optional[bool] = None,
+        show_payment_stats: Optional[bool] = None,
+    ) -> Payments:
         """Displays list of your payments.
 
         Docs: https://lzt-market.readme.io/reference/paymentslisthistory
@@ -94,12 +110,13 @@ class AsyncLolzteamMarketPayment(RequestsClient):
         :param wallet: Optional. Wallet, which used for money payouts.
         :param comment: Optional. Comment for money transfers.
         :param is_hold: Optional. Display hold operations.
-        :param show_payment_stats: Optional. Display payment stats for selected period (outgoing value, incoming value)."""
+        :param show_payment_stats: Optional. Display payment stats for selected period (outgoing value, incoming value).
+        """
 
-        url = f'{self.__base_url}/user/{self.__user_id}/payments'
+        url = f"{self.__base_url}/user/{self.__user_id}/payments"
 
         params = {
-            "type": type,
+            "type": operation_type,
             "pmin": pmin,
             "pmax": pmax,
             "page": page,
@@ -120,8 +137,15 @@ class AsyncLolzteamMarketPayment(RequestsClient):
             if value is None:
                 params.pop(key)
 
-        response = await self._request(self.__payment_name, self.__get_method, url, headers=self.__headers, data=json.dumps(params))
-
+        response = await self._request(
+            self.__payment_name,
+            self.__get_method,
+            url,
+            headers=self.__headers,
+            params=params,
+        )
+        if type(response.get("payments")) is list and len(response.get("payments")) == 0:
+            response["payments"] = {}
         return Payments(**response)
 
     async def check_status_payment(self, pay_amount: int, comment: str) -> bool:
@@ -131,12 +155,14 @@ class AsyncLolzteamMarketPayment(RequestsClient):
         :param comment: Comment indicated in the transaction.
 
         :return: True if payment has been received. Otherwise False"""
-
-        payments = (await self.get_history_payments(type="receiving_money")).payments
-
-        for payment in payments.values():
-            if 'Перевод денег от' in payment['label']['title'] and pay_amount == payment['incoming_sum'] and comment == \
-                    payment['data']['comment']:
-                return True
-
+        payments = (
+            await self.get_history_payments(
+                operation_type="receiving_money",
+                comment=comment,
+                pmin=pay_amount,
+                pmax=pay_amount,
+            )
+        ).payments
+        if payments.values():
+            return True
         return False
