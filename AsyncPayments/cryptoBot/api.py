@@ -7,17 +7,21 @@ from .models import Invoice, MeInfo, Transfer, Balance, Check, ExchangeRate, Cur
 class AsyncCryptoBot(RequestsClient):
     API_HOST: str = "https://t.me/Cryptobot"
 
-    def __init__(self, token: str) -> None:
+    def __init__(self, token: str, is_testnet: bool = False) -> None:
         """
         Initialize CryptoBot API client
         :param token: Your Token
+        :param is_testnet: Optional. True - Testnet is on. False - Testnet is off. Default to False.
         """
         super().__init__()
         self.__token = token
         self.__headers = {
             'Crypto-Pay-API-Token': self.__token,
         }
-        self.__base_url = "https://pay.crypt.bot/api"
+        if is_testnet:
+            self.__base_url = "https://testnet-pay.crypt.bot/api"
+        else:
+            self.__base_url = "https://pay.crypt.bot/api"
         self.__post_method = "POST"
         self.__payment_name = "cryptoBot"
         self.check_values()
@@ -67,6 +71,15 @@ callback – “Return”
         :param expires_in: Optional. You can set a payment time limit for the invoice in seconds. Values between 1-2678400 are accepted. Defaults to 3600
         """
 
+        if allow_comments is True:
+            allow_comments = "true"
+        else:
+            allow_comments = "false"
+            
+        if allow_anonymous is True:
+            allow_anonymous = "true"
+        else:
+            allow_anonymous = "false"
 
         url = f'{self.__base_url}/createInvoice/'
 
@@ -89,11 +102,7 @@ callback – “Return”
             "accepted_assets": accepted_assets,
         }
 
-        for key, value in params.copy().items():
-            if isinstance(value, bool):
-                params[key] = str(value).lower()
-            if value is None:
-                params.pop(key)
+        self._delete_empty_fields(params)
 
         response = await self._request(self.__payment_name, self.__post_method, url, headers=self.__headers,
                                        params=params)
@@ -182,11 +191,7 @@ callback – “Return”
             "disable_send_notification": disable_send_notification,
         }
 
-        for key, value in params.copy().items():
-            if isinstance(value, bool):
-                params[key] = str(value).lower()
-            if value is None:
-                params.pop(key)
+        self._delete_empty_fields(params)
 
         response = await self._request(self.__payment_name, self.__post_method, url, headers=self.__headers,
                                        params=params)
@@ -222,9 +227,7 @@ callback – “Return”
             "count": count,
         }
 
-        for key, value in params.copy().items():
-            if value is None:
-                params.pop(key)
+        self._delete_empty_fields(params)
 
         response = await self._request(self.__payment_name, self.__post_method, url, headers=self.__headers,
                                        params=params)
@@ -257,9 +260,7 @@ callback – “Return”
             "count": count,
         }
 
-        for key, value in params.copy().items():
-            if value is None:
-                params.pop(key)
+        self._delete_empty_fields(params)
 
         response = await self._request(self.__payment_name, self.__post_method, url, headers=self.__headers,
                                        params=params)
@@ -295,9 +296,7 @@ callback – “Return”
             "count": count,
         }
 
-        for key, value in params.copy().items():
-            if value is None:
-                params.pop(key)
+        self._delete_empty_fields(params)
 
         response = await self._request(self.__payment_name, self.__post_method, url, headers=self.__headers,
                                        params=params)

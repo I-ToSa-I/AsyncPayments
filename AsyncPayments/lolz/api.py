@@ -131,11 +131,7 @@ class AsyncLolzteamMarketPayment(RequestsClient):
             "show_payment_stats": show_payment_stats,
         }
 
-        for key, value in params.copy().items():
-            if isinstance(value, bool):
-                params[key] = str(value).lower()
-            if value is None:
-                params.pop(key)
+        self._delete_empty_fields(params)
 
         response = await self._request(
             self.__payment_name,

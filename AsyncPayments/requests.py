@@ -1,5 +1,6 @@
 import ssl
 import certifi
+import json
 
 from typing import Optional
 from aiohttp import ClientSession, TCPConnector
@@ -23,6 +24,11 @@ class RequestsClient:
         self._session = ClientSession(connector=connector)
 
         return self._session
+    
+    def _delete_empty_fields(self, params: dict):
+        for key, value in params.copy().items():
+            if value is None:
+                params.pop(key)
 
     async def _request(self, payment: str, method: str, url: str, **kwargs) -> dict:
 
@@ -32,6 +38,8 @@ class RequestsClient:
             if response.status == 200:
                 if payment in ["ruKassa"]:
                     response = await response.json(content_type="text/html")
+                elif payment in ['payok']:
+                    response = await response.json(content_type="text/plain")
                 else:
                     response = await response.json()
             else:
@@ -61,7 +69,12 @@ class RequestsClient:
         elif payment == "ruKassa":
             if response.get("error"):
                 raise BadRequest("[RuKassa] " + response["message"])
-        else:
-            if response["type"] == "error":
+        elif payment == "freeKassa":
+            if response["type"] == "error" and not response.get("description"):
                 raise BadRequest("[FreeKassa] " + response["message"])
+        else:
+            # payok
+            if response.get("status") and response.pop("status") == "error":
+                raise BadRequest("[PayOK] " + response.get("text", response.get("error_text")) + ". Error code: " + response['error_code'])
+
         return response

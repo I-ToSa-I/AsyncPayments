@@ -26,7 +26,7 @@ class AsyncAaio(RequestsClient):
         self.__secret_key = secretkey
         self.__headers = {
             "Accept": "application/json",
-            "X-Api-Key": self.__api_key,
+            "X-Api-Key": self.__api_key
         }
         self.__post_method = "POST"
         self.__payment_name = "aaio"
@@ -85,11 +85,13 @@ class AsyncAaio(RequestsClient):
             'sign': self.__create_sign(amount, currency, order_id),
         }
 
-        for key, value in params.copy().items():
-            if value is None:
-                params.pop(key)
-
-        return f"{self.API_HOST}/merchant/pay?" + urlencode(params)
+        self._delete_empty_fields(params)
+        
+        headers = self.__headers
+        headers["Content-Type"] = "application/x-www-form-urlencoded"
+        response = await self._request(self.__payment_name, self.__post_method, f"{self.API_HOST}/merchant/get_pay_url", headers=headers, data=urlencode(params))
+        
+        return response['url']
 
     async def get_balance(self) -> Balance:
         """Get available, referal and hold balance.
@@ -119,9 +121,7 @@ class AsyncAaio(RequestsClient):
             'order_id': order_id,
         }
 
-        for key, value in params.copy().items():
-            if value is None:
-                params.pop(key)
+        self._delete_empty_fields(params)
 
         response = await self._request(self.__payment_name, self.__post_method, url, data=params, headers=self.__headers)
 
