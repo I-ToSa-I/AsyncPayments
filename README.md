@@ -1,6 +1,8 @@
 # AsyncPayments
 ![PyPiAsyncPaymentsPackage](https://img.shields.io/badge/pypi-AsyncPayments-red)
 ![PyPiAsyncPaymentsPackageVersion](https://img.shields.io/pypi/v/AsyncPayments)
+![PyPI - Python Version](https://img.shields.io/pypi/pyversions/AsyncPayments?color=brightgreen)
+
 > Add payment acceptance to your projects.
 ## Installing
     pip install AsyncPayments
