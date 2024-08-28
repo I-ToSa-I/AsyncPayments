@@ -4,7 +4,10 @@
     pip install AsyncPayments
 ## Version
     v1.4.2
+![PyPiAsyncPaymentsPackage](https://img.shields.io/badge/pypi-AsyncPayments-red)
+![PyPiAsyncPaymentsPackageVersion](https://img.shields.io/pypi/v/AsyncPayments)
 ## Code example
+
 ```python
 import asyncio
 
