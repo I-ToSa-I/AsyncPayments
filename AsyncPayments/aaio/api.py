@@ -122,9 +122,9 @@ class AsyncAaio(RequestsClient):
         }
 
         self._delete_empty_fields(params)
-
+        
         response = await self._request(self.__payment_name, self.__post_method, url, data=params, headers=self.__headers)
-
+        
         return Order(**response)
 
     async def get_withdrawal_methods(self,

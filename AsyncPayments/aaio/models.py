@@ -14,7 +14,7 @@ class Order(BaseModel):
     merchant_id: str
     merchant_domain: str
     method: Optional[str] = None
-    amount: float
+    amount: Union[int, float]
     currency: str
     profit: Optional[float] = None
     commission: Optional[float] = None
@@ -25,7 +25,7 @@ class Order(BaseModel):
     date: str
     expired_date: str
     complete_date: Optional[str] = None
-    us_vars: dict
+    us_vars: Optional[Union[dict, str, list]] = None
 
 class OrderMethodCurrencies(BaseModel):
     RUB: float
