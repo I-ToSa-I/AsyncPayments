@@ -53,7 +53,7 @@ class AsyncRuKassa(RequestsClient):
 
     async def create_payment(self, amount: Union[int, float], currency: Optional[str] = "RUB",
                              method: Optional[str] = None, data: Optional[str] = None,
-                             orderId: Optional[int] = None) -> CreatePayment:
+                             orderId: Optional[int] = None, userCode: Optional[str] = None) -> CreatePayment:
         """Create a payment
 
         :param amount: Amount of payment.
@@ -61,7 +61,8 @@ class AsyncRuKassa(RequestsClient):
         :param method: Optional. Payment method, if you want payment to be made through a specific method. Methods: card, card_byn, card_kzt, card_uah, card_uzs, qiwi, yandexmoney, payeer, crypta, sbp,
         :param data: Optional. String sent to the server along with a notification of a successful payment.
         :param orderId: Optional. A unique payment number in your system. If not specified, a random string will be generated.
-
+        :param userCode: Optional. For H2H, Anti-Fraud is required. Client ID (you can use the user's IP address or Telegram ID).
+        
         :return: CreatePayment object
         """
 
@@ -78,6 +79,7 @@ class AsyncRuKassa(RequestsClient):
             "data": data,
             "method": method,
             "currency": currency,
+            "user_code": userCode,
         }
 
         for key, value in params.copy().items():
