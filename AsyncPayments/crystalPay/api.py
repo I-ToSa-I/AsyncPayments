@@ -64,7 +64,6 @@ class AsyncCrystalPay(RequestsClient):
             "auth_secret": self.__secret,
         }
         response = await self._request(self.__payment_name, self.__post_method, url, headers=self.__headers, data=json.dumps(params))
-
         return Balances(**response['balances'])
 
     async def get_payment_methods(self) -> PaymentsMethods:

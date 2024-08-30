@@ -23,25 +23,22 @@ class Balances(BaseModel):
     BITCOINCASH: Balance
     BNBCRYPTOBOT: Balance
     BNBSMARTCHAIN: Balance
-    BTCBANKER: Balance
-    BTCCHATEX: Balance
     BTCCRYPTOBOT: Balance
     CARDRUBP2P: Balance
-    CARDTRYP2P: Balance
     DASH: Balance
     DOGECOIN: Balance
-    ETHBANKER: Balance
     ETHCRYPTOBOT: Balance
     ETHEREUM: Balance
     LITECOIN: Balance
-    LTCBANKER: Balance
+    LTCCRYPTOBOT: Balance
     LZTMARKET: Balance
     POLYGON: Balance
+    SBERPAYP2P: Balance
+    SBPP2P: Balance
+    TONCOIN: Balance
     TONCRYPTOBOT: Balance
     TRON: Balance
     USDCTRC: Balance
-    USDTBANKER: Balance
-    USDTCHATEX: Balance
     USDTCRYPTOBOT: Balance
     USDTTRC: Balance
 
