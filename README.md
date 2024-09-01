@@ -7,7 +7,7 @@
 ## Installing
     pip install AsyncPayments
 ## Version
-    v1.4.3.3
+    v1.4.4
 ## Code example
 
 ```python
@@ -37,7 +37,7 @@ async def main():
     balance_lolz = await lolz.get_me()
     balance_aaio = await aaio.get_balance()
     balance_crypto_bot = await cryptoBot.get_balance()
-    balance_crystal_pay = await crystalPay.get_balance()
+    balance_crystal_pay = await crystalPay.get_balance_list()
     
     print("PayOK:")
     print("Баланс: ", balance_payok.balance)
@@ -68,7 +68,7 @@ async def main():
     print('--------------')
     print("CrystalPay:")
     for currency, balance in balance_crystal_pay:
-        print(f"Доступно {currency}:", balance.amount, f" {balance.currency}")
+        print(f"Доступно {currency}: {balance.amount} {balance.currency}")
     
     print('------------------------------------------')
     
@@ -125,7 +125,7 @@ async def main():
     print("Статус: ", info_crypto_bot.status)
     print('--------------')
     print("CrystalPay:")
-    print("Сумма: ", info_crystal_pay.amount)
+    print("Сумма: ", info_crystal_pay.rub_amount)
     print("Статус:", info_crystal_pay.state)
     
 
@@ -170,31 +170,28 @@ CryptoBot:
 Доступно USDC:  0.0  (В холде: 0.0)
 --------------
 CrystalPay:
-Доступно BITCOIN: 0.0  BTC
-Доступно BITCOINCASH: 0.0  BCH
-Доступно BNBCRYPTOBOT: 0.0  BNB
-Доступно BNBSMARTCHAIN: 0.0  BNB
-Доступно BTCBANKER: 0.0  RUB
-Доступно BTCCHATEX: 0.0  RUB
-Доступно BTCCRYPTOBOT: 0.0  BTC
-Доступно CARDRUBP2P: 0.0  RUB
-Доступно CARDTRYP2P: 0.0  TRY
-Доступно DASH: 0.0  DASH
-Доступно DOGECOIN: 0.0  DOGE
-Доступно ETHBANKER: 0.0  RUB
-Доступно ETHCRYPTOBOT: 0.0  ETH
-Доступно ETHEREUM: 0.0  ETH
-Доступно LITECOIN: 0.0  LTC
-Доступно LTCBANKER: 0.0  RUB
-Доступно LZTMARKET: 184.0  RUB
-Доступно POLYGON: 0.0  MATIC
-Доступно TONCRYPTOBOT: 0.09825723  TON
-Доступно TRON: 0.0  TRX
-Доступно USDCTRC: 0.0  USDC
-Доступно USDTBANKER: 0.0  RUB
-Доступно USDTCHATEX: 0.0  RUB
-Доступно USDTCRYPTOBOT: 0.144637  USDT
-Доступно USDTTRC: 0.0  USDT
+Доступно BITCOIN: 0 BTC
+Доступно BITCOINCASH: 0 BCH
+Доступно BNBCRYPTOBOT: 0 BNB
+Доступно BNBSMARTCHAIN: 0 BNB
+Доступно BTCCRYPTOBOT: 0 BTC
+Доступно CARDRUBP2P: 0 RUB
+Доступно DASH: 0 DASH
+Доступно DOGECOIN: 0 DOGE
+Доступно ETHCRYPTOBOT: 0 ETH
+Доступно ETHEREUM: 0 ETH
+Доступно LITECOIN: 0 LTC
+Доступно LTCCRYPTOBOT: 0 LTC
+Доступно LZTMARKET: 0 RUB
+Доступно POLYGON: 0 MATIC
+Доступно SBERPAYP2P: 0 RUB
+Доступно SBPP2P: 0 RUB
+Доступно TONCOIN: 0 TON
+Доступно TONCRYPTOBOT: 0 TON
+Доступно TRON: 0 TRX
+Доступно USDCTRC: 0 USDC
+Доступно USDTCRYPTOBOT: 0 USDT
+Доступно USDTTRC: 0 USDT
 ------------------------------------------
 PayOK: https://payok.io//pay?amount=15&payment=4364575733&shop=12452&currency=RUB&desc=Description&sign=af2fdc6796750e3c6910230095ec0ed8
 FreeKassa: https://pay.freekassa.com/form/161328352/576046439bd01de60a6e418bad9354a2
@@ -202,7 +199,7 @@ RuKassa:  https://pay.ruks.pro/?hash=435fc3cee737f9dac2b34c9ba9311eae
 Lolz:  https://lzt.market/balance/transfer?user_id=4810752&hold=0&amount=15&comment=orderId
 Aaio:  https://aaio.io/merchant/pay?merchant_id=f398c75d-b775-412c-9674-87939692c083&amount=15&order_id=orderId&currency=RUB&sign=6ad5dc2164059a255921ad216c7e5ffd0d2abcaec9af7415636fc12df938582f
 CryptoBot:  https://t.me/CryptoBot?start=IVYOJWPOZh15
-CrystalPay:  https://pay.crystalpay.io/?i=715297022_MxRoixNnSrMSBD
+CrystalPay:  https://pay.crystalpay.io/?i=715308958_rPwTzvsvCmabwl
 ------------------------------------------
 PayOK:
 Сумма:  15
@@ -229,7 +226,7 @@ CryptoBot:
 Статус:  active
 --------------
 CrystalPay:
-Сумма:  15.0
+Сумма:  15
 Статус: notpayed
 
 ```
@@ -238,7 +235,7 @@ CrystalPay:
 > Lolzteam Market: https://lzt-market.readme.io/reference/ <br>
 > Aaio: https://wiki.aaio.io <br>
 > CryptoBot: https://help.crypt.bot/crypto-pay-api <br>
-> CrystalPay: https://docs.crystalpay.io <br>
+> CrystalPay: https://docs.crystalpay.io/ <br>
 > RuKassa: https://lk.rukassa.is/api/v1 <br>
 > FreeKassa: https://docs.freekassa.com/ <br>
 > PayOK: https://payok.io/cabinet/documentation/doc_main.php <br>
