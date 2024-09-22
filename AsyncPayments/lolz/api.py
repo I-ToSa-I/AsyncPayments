@@ -98,7 +98,7 @@ class AsyncLolzteamMarketPayment(RequestsClient):
 
         Docs: https://lzt-market.readme.io/reference/paymentslisthistory
 
-        :param type: Optional. Type of operation. It can only be: "income", "cost", "refilled_balance", "withdrawal_balance", "paid_item", "sold_item", "money_transfer", "receiving_money", "internal_purchase", "claim_hold".
+        :param operation_type: Optional. Type of operation. It can only be: "income", "cost", "refilled_balance", "withdrawal_balance", "paid_item", "sold_item", "money_transfer", "receiving_money", "internal_purchase", "claim_hold".
         :param pmin: Optional. Minimal price of account (Inclusive).
         :param pmax: Optional. Maximum price of account (Inclusive).
         :param page: Optional. The number of the page to display results from.
@@ -114,6 +114,11 @@ class AsyncLolzteamMarketPayment(RequestsClient):
         """
 
         url = f"{self.__base_url}/user/{self.__user_id}/payments"
+
+        if is_hold:
+            is_hold = int(is_hold)
+        if show_payment_stats:
+            show_payment_stats = int(show_payment_stats)
 
         params = {
             "type": operation_type,
