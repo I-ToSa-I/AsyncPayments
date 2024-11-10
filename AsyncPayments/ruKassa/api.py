@@ -1,6 +1,7 @@
 from AsyncPayments.requests import RequestsClient
 from typing import Optional, Union
-from .models import Balance, CreatePayment, Payment, CreateWithdrawRequest, CancelWithdrawRequest, WithdrawRequest
+from .models import Balance, CreatePayment, Payment, CreateWithdrawRequest, CancelWithdrawRequest, WithdrawRequest, \
+    RevokePayment
 
 import time
 import secrets
@@ -23,7 +24,7 @@ class AsyncRuKassa(RequestsClient):
         self.__shop_id = shop_id
         self.__email = email
         self.__password = password
-        self.__base_url = "https://lk.rukassa.is/api/v1"
+        self.__base_url = "https://lk.rukassa.pro/api/v1"
         self.__post_method = "POST"
         self.__payment_name = "ruKassa"
         self.check_values()
@@ -90,11 +91,27 @@ class AsyncRuKassa(RequestsClient):
 
         return CreatePayment(**response)
 
-    async def get_info_payment(self, id: int) -> Payment:
+    async def revoke_payment(self, payment_id: int) -> RevokePayment:
+        """
+        Revoke payment
+
+        :param payment_id: Payment ID in our system.
+        :return: RevokePayment object
+        """
+        url = f"{self.__base_url}/revoke"
+        params = {
+            "id": payment_id,
+            "shop_id": self.__shop_id,
+            "token": self.__token,
+        }
+        response = await self._request(self.__payment_name, self.__post_method, url, data=params)
+        return RevokePayment(**response)
+
+    async def get_info_payment(self, payment_id: int) -> Payment:
         """
         Get payment information
 
-        :param id: Transaction (entry) number in our system.
+        :param payment_id: Transaction (entry) number in our system.
 
         :return: Payment object
         """
@@ -102,7 +119,7 @@ class AsyncRuKassa(RequestsClient):
         url = f"{self.__base_url}/getPayInfo"
 
         params = {
-            "id": id,
+            "id": payment_id,
             "shop_id": self.__shop_id,
             "token": self.__token,
         }
@@ -146,11 +163,11 @@ class AsyncRuKassa(RequestsClient):
 
         return CreateWithdrawRequest(**response)
 
-    async def cancel_withdraw(self, id: int) -> CancelWithdrawRequest:
+    async def cancel_withdraw(self, payment_id: int) -> CancelWithdrawRequest:
         """
         Cancel withdraw request
 
-        :param id: Payment ID in our system.
+        :param payment_id: Payment ID in our system.
 
         :return: CancelWithdrawRequest object
         """
@@ -160,18 +177,18 @@ class AsyncRuKassa(RequestsClient):
         params = {
             "email": self.__email,
             "password": self.__password,
-            "id": id,
+            "id": payment_id,
         }
 
         response = await self._request(self.__payment_name, self.__post_method, url, data=params)
 
         return CancelWithdrawRequest(**response)
 
-    async def get_info_withdraw(self, id: int) -> WithdrawRequest:
+    async def get_info_withdraw(self, payment_id: int) -> WithdrawRequest:
         """
         Get info about withdraw request
 
-        :param id: The number of the operation (withdrawal) in our system.
+        :param payment_id: The number of the operation (withdrawal) in our system.
 
         :return: WithdrawRequest object
         """
@@ -181,7 +198,7 @@ class AsyncRuKassa(RequestsClient):
         params = {
             "token": self.__token,
             "shop_id": self.__shop_id,
-            "id": id,
+            "id": payment_id,
         }
 
         response = await self._request(self.__payment_name, self.__post_method, url, data=params)

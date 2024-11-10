@@ -23,6 +23,10 @@ class Payment(BaseModel):
     data: str
 
 
+class RevokePayment(BaseModel):
+    id: int
+
+
 class CreateWithdrawRequest(BaseModel):
     id: int
     status: str

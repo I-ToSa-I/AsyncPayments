@@ -7,7 +7,7 @@
 ## Installing
     pip install AsyncPayments
 ## Version
-    v1.4.4.1
+    v1.4.5
 ## Code example
 
 ```python
@@ -21,13 +21,13 @@ from AsyncPayments.crystalPay import AsyncCrystalPay
 from AsyncPayments.freeKassa import AsyncFreeKassa
 from AsyncPayments.payok import AsyncPayOK
 
-ruKassa = AsyncRuKassa("Api-Token", 1, "Email", "Password") # 1 - ShopID
+ruKassa = AsyncRuKassa("Api-Token", 1, "Email", "Password")  # 1 - ShopID
 lolz = AsyncLolzteamMarketPayment("Token")
 aaio = AsyncAaio("ApiKey", "ShopId", "SecretKey")
-cryptoBot = AsyncCryptoBot("Token", False) # True - Testnet is on. False - Testnet is off. Default to False.
+cryptoBot = AsyncCryptoBot("Token", False)  # True - Testnet is on. False - Testnet is off. Default to False.
 crystalPay = AsyncCrystalPay("Login", "Secret", "Salt")
-freeKassa = AsyncFreeKassa("ApiKey", 1) # 1 - ShopID
-payok = AsyncPayOK("ApiKey", "SecretKey", 1, 2) # 1 - ApiID, 2 - ShopID
+freeKassa = AsyncFreeKassa("ApiKey", 1)  # 1 - ShopID
+payok = AsyncPayOK("ApiKey", "SecretKey", 1, 2)  # 1 - ApiID, 2 - ShopID
 
 
 async def main():
@@ -38,12 +38,12 @@ async def main():
     balance_aaio = await aaio.get_balance()
     balance_crypto_bot = await cryptoBot.get_balance()
     balance_crystal_pay = await crystalPay.get_balance_list()
-    
+
     print("PayOK:")
     print("Баланс: ", balance_payok.balance)
     print("Реферальный баланс: ", balance_payok.ref_balance)
     print('--------------')
-    print("FreeKassa":)
+    print("FreeKassa:")
     for balance in balance_freekassa:
         print(f"{balance.currency}: ", balance.value)
     print('--------------')
@@ -69,9 +69,9 @@ async def main():
     print("CrystalPay:")
     for currency, balance in balance_crystal_pay:
         print(f"Доступно {currency}: {balance.amount} {balance.currency}")
-    
+
     print('------------------------------------------')
-    
+
     order_payok = await payok.create_pay(15, "orderId")
     order_freeKassa = await freeKassa.create_order(1, "example@gmail.com", "0.0.0.0", 150, "RUB")
     order_ruKassa = await ruKassa.create_payment(15)
@@ -79,7 +79,7 @@ async def main():
     order_aaio = await aaio.create_payment_url(15, "orderId")
     order_crypto_bot = await cryptoBot.create_invoice(15, currency_type="crypto", asset="USDT")
     order_crystal_pay = await crystalPay.create_payment(15)
-    
+
     print("PayOK", order_payok)
     print("FreeKassa", order_freeKassa.location)
     print("RuKassa: ", order_ruKassa.url)
@@ -87,9 +87,9 @@ async def main():
     print('Aaio: ', order_aaio)
     print('CryptoBot: ', order_crypto_bot.pay_url)
     print('CrystalPay: ', order_crystal_pay.url)
-    
+
     print('------------------------------------------')
-    
+
     info_payok = await payok.get_transactions("orderId")
     info_freeKassa = await freeKassa.get_orders("orderId")
     info_ruKassa = await ruKassa.get_info_payment("orderId")
@@ -99,7 +99,7 @@ async def main():
         invoice_ids=["orderId"], count=1
     )
     info_crystal_pay = await crystalPay.get_payment_info("orderId")
-    
+
     print("PayOK:")
     print("Сумма: ", info_payok.amount)
     print("Статус: ", info_payok.transaction_status)
@@ -127,7 +127,7 @@ async def main():
     print("CrystalPay:")
     print("Сумма: ", info_crystal_pay.rub_amount)
     print("Статус:", info_crystal_pay.state)
-    
+
 
 asyncio.run(main())
 ```
@@ -135,7 +135,7 @@ asyncio.run(main())
 ```Python
 PayOK:
 Баланс: 0
-Реферальный баланс: 0.00)
+Реферальный баланс: 0.00
 --------------
 FreeKassa:
 RUB:  0.00
@@ -236,11 +236,11 @@ CrystalPay:
 > Aaio: https://wiki.aaio.io <br>
 > CryptoBot: https://help.crypt.bot/crypto-pay-api <br>
 > CrystalPay: https://docs.crystalpay.io/ <br>
-> RuKassa: https://lk.rukassa.is/api/v1 <br>
+> RuKassa: https://lk.rukassa.pro/api/v1 <br>
 > FreeKassa: https://docs.freekassa.com/ <br>
 > PayOK: https://payok.io/cabinet/documentation/doc_main.php <br>
 
 ## Developer Links
-> Zelenka (Lolzteam): https://zelenka.guru/tosa <br>
+> Zelenka (Lolzteam): https://lzt.market/tosa <br>
 > GitHub: https://github.com/I-ToSa-I <br>
 > Telegram: https://t.me/ToSa_LZT

@@ -1,0 +1,132 @@
+<component name="InspectionProjectProfileManager">
+  <profile version="1.0">
+    <option name="myName" value="Project Default" />
+    <inspection_tool class="DuplicatedCode" enabled="true" level="WEAK WARNING" enabled_by_default="true">
+      <Languages>
+        <language minSize="52" name="Python" />
+      </Languages>
+    </inspection_tool>
+    <inspection_tool class="HttpUrlsUsage" enabled="true" level="WEAK WARNING" enabled_by_default="true">
+      <option name="ignoredUrls">
+        <list>
+          <option value="http://localhost" />
+          <option value="http://127.0.0.1" />
+          <option value="http://0.0.0.0" />
+          <option value="http://www.w3.org/" />
+          <option value="http://json-schema.org/draft" />
+          <option value="http://java.sun.com/" />
+          <option value="http://xmlns.jcp.org/" />
+          <option value="http://javafx.com/javafx/" />
+          <option value="http://javafx.com/fxml" />
+          <option value="http://maven.apache.org/xsd/" />
+          <option value="http://maven.apache.org/POM/" />
+          <option value="http://www.springframework.org/schema/" />
+          <option value="http://www.springframework.org/tags" />
+          <option value="http://www.springframework.org/security/tags" />
+          <option value="http://www.thymeleaf.org" />
+          <option value="http://www.jboss.org/j2ee/schema/" />
+          <option value="http://www.jboss.com/xml/ns/" />
+          <option value="http://www.ibm.com/webservices/xsd" />
+          <option value="http://activemq.apache.org/schema/" />
+          <option value="http://schema.cloudfoundry.org/spring/" />
+          <option value="http://schemas.xmlsoap.org/" />
+          <option value="http://cxf.apache.org/schemas/" />
+          <option value="http://primefaces.org/ui" />
+          <option value="http://tiles.apache.org/" />
+          <option value="http://" />
+        </list>
+      </option>
+    </inspection_tool>
+    <inspection_tool class="PyInterpreterInspection" enabled="false" level="WARNING" enabled_by_default="false" />
+    <inspection_tool class="PyPackageRequirementsInspection" enabled="true" level="WARNING" enabled_by_default="true">
+      <option name="ignoredPackages">
+        <value>
+          <list size="69">
+            <item index="0" class="java.lang.String" itemvalue="bs4" />
+            <item index="1" class="java.lang.String" itemvalue="aiogram" />
+            <item index="2" class="java.lang.String" itemvalue="loguru" />
+            <item index="3" class="java.lang.String" itemvalue="sqlite" />
+            <item index="4" class="java.lang.String" itemvalue="beautifulsoup4" />
+            <item index="5" class="java.lang.String" itemvalue="aiosqlite" />
+            <item index="6" class="java.lang.String" itemvalue="aiohttp" />
+            <item index="7" class="java.lang.String" itemvalue="requests" />
+            <item index="8" class="java.lang.String" itemvalue="tzlocal" />
+            <item index="9" class="java.lang.String" itemvalue="PyYAML" />
+            <item index="10" class="java.lang.String" itemvalue="ufw" />
+            <item index="11" class="java.lang.String" itemvalue="MarkupSafe" />
+            <item index="12" class="java.lang.String" itemvalue="PyGObject" />
+            <item index="13" class="java.lang.String" itemvalue="pyasn1-modules" />
+            <item index="14" class="java.lang.String" itemvalue="python-magic" />
+            <item index="15" class="java.lang.String" itemvalue="systemd-python" />
+            <item index="16" class="java.lang.String" itemvalue="pycryptodomex" />
+            <item index="17" class="java.lang.String" itemvalue="sos" />
+            <item index="18" class="java.lang.String" itemvalue="oauthlib" />
+            <item index="19" class="java.lang.String" itemvalue="pyparsing" />
+            <item index="20" class="java.lang.String" itemvalue="unattended-upgrades" />
+            <item index="21" class="java.lang.String" itemvalue="jsonschema" />
+            <item index="22" class="java.lang.String" itemvalue="service-identity" />
+            <item index="23" class="java.lang.String" itemvalue="pydantic" />
+            <item index="24" class="java.lang.String" itemvalue="lazr.restfulclient" />
+            <item index="25" class="java.lang.String" itemvalue="zope.interface" />
+            <item index="26" class="java.lang.String" itemvalue="pycbrf" />
+            <item index="27" class="java.lang.String" itemvalue="pexpect" />
+            <item index="28" class="java.lang.String" itemvalue="lazr.uri" />
+            <item index="29" class="java.lang.String" itemvalue="python-apt" />
+            <item index="30" class="java.lang.String" itemvalue="SecretStorage" />
+            <item index="31" class="java.lang.String" itemvalue="ubuntu-advantage-tools" />
+            <item index="32" class="java.lang.String" itemvalue="ssh-import-id" />
+            <item index="33" class="java.lang.String" itemvalue="pydantic_core" />
+            <item index="34" class="java.lang.String" itemvalue="PySocks" />
+            <item index="35" class="java.lang.String" itemvalue="python-socks" />
+            <item index="36" class="java.lang.String" itemvalue="jsonpatch" />
+            <item index="37" class="java.lang.String" itemvalue="PyJWT" />
+            <item index="38" class="java.lang.String" itemvalue="rsa" />
+            <item index="39" class="java.lang.String" itemvalue="netifaces" />
+            <item index="40" class="java.lang.String" itemvalue="pyaes" />
+            <item index="41" class="java.lang.String" itemvalue="ptyprocess" />
+            <item index="42" class="java.lang.String" itemvalue="more-itertools" />
+            <item index="43" class="java.lang.String" itemvalue="pyasn1" />
+            <item index="44" class="java.lang.String" itemvalue="wadllib" />
+            <item index="45" class="java.lang.String" itemvalue="jeepney" />
+            <item index="46" class="java.lang.String" itemvalue="Jinja2" />
+            <item index="47" class="java.lang.String" itemvalue="python-debian" />
+            <item index="48" class="java.lang.String" itemvalue="pyrsistent" />
+            <item index="49" class="java.lang.String" itemvalue="Telethon" />
+            <item index="50" class="java.lang.String" itemvalue="pyOpenSSL" />
+            <item index="51" class="java.lang.String" itemvalue="launchpadlib" />
+            <item index="52" class="java.lang.String" itemvalue="zipp" />
+            <item index="53" class="java.lang.String" itemvalue="urllib3" />
+            <item index="54" class="java.lang.String" itemvalue="ubuntu-drivers-common" />
+            <item index="55" class="java.lang.String" itemvalue="six" />
+            <item index="56" class="java.lang.String" itemvalue="phonenumbers" />
+            <item index="57" class="java.lang.String" itemvalue="magic-filter" />
+            <item index="58" class="java.lang.String" itemvalue="xkit" />
+            <item index="59" class="java.lang.String" itemvalue="jsonpointer" />
+            <item index="60" class="java.lang.String" itemvalue="PyHamcrest" />
+            <item index="61" class="java.lang.String" itemvalue="pyserial" />
+            <item index="62" class="java.lang.String" itemvalue="typing_extensions" />
+            <item index="63" class="java.lang.String" itemvalue="Pyrogram" />
+            <item index="64" class="java.lang.String" itemvalue="multidict" />
+            <item index="65" class="java.lang.String" itemvalue="yarl" />
+            <item index="66" class="java.lang.String" itemvalue="pytz" />
+            <item index="67" class="java.lang.String" itemvalue="keyring" />
+            <item index="68" class="java.lang.String" itemvalue="Twisted" />
+          </list>
+        </value>
+      </option>
+    </inspection_tool>
+    <inspection_tool class="PyPep8NamingInspection" enabled="true" level="WEAK WARNING" enabled_by_default="true">
+      <option name="ignoredErrors">
+        <list>
+          <option value="N813" />
+          <option value="N806" />
+          <option value="N803" />
+          <option value="N802" />
+          <option value="N814" />
+        </list>
+      </option>
+    </inspection_tool>
+    <inspection_tool class="SqlNoDataSourceInspection" enabled="false" level="WARNING" enabled_by_default="false" />
+    <inspection_tool class="SqlResolveInspection" enabled="false" level="ERROR" enabled_by_default="false" />
+  </profile>
+</component>
