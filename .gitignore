@@ -10,3 +10,5 @@ dist/
 *.egg-info/
 
 .github
+
+.idea
