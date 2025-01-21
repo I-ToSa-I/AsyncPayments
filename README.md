@@ -21,7 +21,7 @@ from AsyncPayments.crystalPay import AsyncCrystalPay
 from AsyncPayments.freeKassa import AsyncFreeKassa
 from AsyncPayments.payok import AsyncPayOK
 from AsyncPayments.cryptomus import AsyncCryptomus
-from AsyncPaymentsTest.xrocket import AsyncXRocket
+from AsyncPayments.xrocket import AsyncXRocket
 
 ruKassa = AsyncRuKassa(api_token="ApiToken", shop_id=1, email="Email", password="Password")
 lolz = AsyncLolzteamMarketPayment(token="Token")
