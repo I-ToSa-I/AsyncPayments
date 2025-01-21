@@ -1,6 +1,5 @@
-from AsyncPayments.requests import RequestsClient
+from ..requests import RequestsClient
 from typing import Optional, Union, List
-
 from .models import Invoice, MeInfo, Transfer, Balance, Check, ExchangeRate, Currency
 
 

@@ -1,10 +1,7 @@
 import ssl
 import certifi
-import json
-
 from typing import Optional
 from aiohttp import ClientSession, TCPConnector
-
 from .exceptions.exceptions import BadRequest, RequestError
 
 
@@ -25,17 +22,17 @@ class RequestsClient:
 
         return self._session
     
-    def _delete_empty_fields(self, params: dict):
+    def _delete_empty_fields(self, params: dict) -> None:
         for key, value in params.copy().items():
             if value is None:
                 params.pop(key)
 
     async def _request(self, payment: str, method: str, url: str, **kwargs) -> dict:
-
         session = self._getsession()
 
         async with session.request(method, url, **kwargs) as response:
-            if response.status == 200:
+            await self._session.close()
+            if response.status in [200, 201]:
                 if payment in ["ruKassa"]:
                     response = await response.json(content_type="text/html")
                 elif payment in ['payok']:
@@ -43,13 +40,13 @@ class RequestsClient:
                 else:
                     response = await response.json()
             else:
-                raise RequestError(
-                    f"Response status: {response.status}. Text: {await response.text()}"
-                )
-
-        await self._session.close()
-
-        return await self._checkexception(payment, response)
+                try:
+                    return await self._checkexception(payment, await response.json())
+                except:
+                    raise RequestError(
+                        f"{payment}. Response status: {response.status}. Text: {await response.text()}"
+                    )
+            return response
 
     async def _checkexception(self, payment: str, response: dict) -> dict:
         if payment == "aaio":
@@ -72,6 +69,24 @@ class RequestsClient:
         elif payment == "freeKassa":
             if response["type"] == "error" and not response.get("description"):
                 raise BadRequest("[FreeKassa] " + response["message"])
+        elif payment == "cryptomus":
+            if response.get('state') != 0:
+                if response.get("errors"):
+                    raise BadRequest("[Cryptomus] " + str(response.get("errors")))
+                else:
+                    raise BadRequest("[Cryptomus] " + str(response.get("message")))
+            else:
+                raise BadRequest("[Cryptomus] " + response.get("message"))
+        elif payment == "xrocket":
+            if not response.get("success"):
+                text = f"[XRocket] {response.get('message')}"
+                if response.get("errors"):
+                    text += ": \n"
+                    for error in response.get("errors"):
+                        text += f"Property: {error['property']} \nError: {error['error']}"
+                raise BadRequest(text)
+            else:
+                raise BadRequest(f"[XRocket] Status code: {response.get('statusCode')}. Message: " + response.get("message"))
         else:
             # payok
             if response.get("status") and response.pop("status") == "error":

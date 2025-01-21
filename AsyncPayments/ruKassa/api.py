@@ -1,8 +1,6 @@
-from AsyncPayments.requests import RequestsClient
+from ..requests import RequestsClient
 from typing import Optional, Union
-from .models import Balance, CreatePayment, Payment, CreateWithdrawRequest, CancelWithdrawRequest, WithdrawRequest, \
-    RevokePayment
-
+from .models import Balance, CreatePayment, Payment, CreateWithdrawRequest, CancelWithdrawRequest, WithdrawRequest, RevokePayment
 import time
 import secrets
 import random

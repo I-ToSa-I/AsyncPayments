@@ -1,4 +1,4 @@
-from AsyncPayments.requests import RequestsClient
+from ..requests import RequestsClient
 from typing import Optional, Union, List
 from .models import Balance, Order, Orders, CreateOrder, Currency, WithdrawalCurrency, Store, Withdrawal, Withdrawals, CreateWithdrawal
 
@@ -137,7 +137,6 @@ class AsyncFreeKassa(RequestsClient):
         
         return [Currency(**currency) for currency in response['currencies']]
     
-    
     async def check_currency_status(self, paymentId: int) -> bool:
         """Check the availability of the payment system for payment.
         
@@ -154,7 +153,7 @@ class AsyncFreeKassa(RequestsClient):
         response = await self._request(self.__payment_name, self.__post_method, url, headers=self.__headers, data=json.dumps(params))
         
         return response['type'] == "success"
-            
+  
     async def get_list_of_currencies_for_withdrawal(self) -> List[WithdrawalCurrency]:
         """Get list of all available currencies for withdrawal.
         

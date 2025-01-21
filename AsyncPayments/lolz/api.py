@@ -1,7 +1,7 @@
-from AsyncPayments.requests import RequestsClient
+from ..requests import RequestsClient
 from typing import Optional, Union
 from .models import User, Payments
-from AsyncPayments.exceptions import MissingScopeError
+from ..exceptions import MissingScopeError
 
 import json
 import random

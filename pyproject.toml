@@ -3,7 +3,7 @@ requires = ["setuptools", "setuptools-scm"]
 build-backend = "setuptools.build_meta"
 [project]
 name = "AsyncPayments"
-version = "1.4.5"
+version = "1.4.6"
 dependencies = [
     "aiohttp"
 ]
@@ -26,6 +26,8 @@ keywords = [
     "async payments",
     "free kassa",
     "ru kassa",
+    "cryptomus",
+    "xrocket",
     "payok"
 ]
 classifiers = [

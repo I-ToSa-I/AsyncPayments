@@ -1,12 +1,10 @@
-from AsyncPayments.requests import RequestsClient
+from ..requests import RequestsClient
 from typing import Optional, Union, List
 from .models import CreatePayment, CassaInfo, PayoffCreate, TickersRate, PayoffRequest, \
                     PaymentInfo, BalancesList, Balance, Methods, Method, SwapPair, \
                     CreateSwap, SwapInfo, CreateTransfer, TransferInfo, Stats
-
 import json
 import hashlib
-
 
 
 class AsyncCrystalPay(RequestsClient):

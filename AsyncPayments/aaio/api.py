@@ -1,4 +1,4 @@
-from AsyncPayments.requests import RequestsClient
+from ..requests import RequestsClient
 from .models import Order, OrderMethod, WithdrawalMethod, CreateWithdrawalInfo, Withdrawal, Balance
 from typing import Optional, Union, List
 from urllib.parse import urlencode
@@ -9,11 +9,7 @@ import hashlib
 class AsyncAaio(RequestsClient):
     API_HOST: str = "https://aaio.so"
 
-    def __init__(self,
-            apikey: str,
-            shopid: Optional[str] = None,
-            secretkey: Optional[str] = None,
-            ) -> None:
+    def __init__(self, apikey: str, shopid: str, secretkey: str) -> None:
         '''
         Initialize Aaio API client
         :param apikey: Your API Key
@@ -33,8 +29,8 @@ class AsyncAaio(RequestsClient):
         self.check_values()
 
     def check_values(self):
-        if not self.__secret_key or not self.__shop_id:
-            raise ValueError('No SecretKey or ShopID specified')
+        if not self.__secret_key or not self.__shop_id or not self.__api_key:
+            raise ValueError('No SecretKey, ApiKey or ShopID specified')
 
     def __create_sign(self, amount: Union[float, int], currency: str, order_id: str) -> str:
         params_for_sing = ':'.join(map(

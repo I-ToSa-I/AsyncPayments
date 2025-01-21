@@ -1,8 +1,7 @@
-from AsyncPayments.requests import RequestsClient
+from ..requests import RequestsClient
 from typing import Optional, Union, List
 from .models import Balance, Transaction, Payout, CreatePayout, PayoutOnCreate
 from urllib.parse import urlencode
-
 import hashlib
 
 
