@@ -1,6 +1,6 @@
 from ..requests import RequestsClient
 from typing import Optional, Union
-from .models import User, Payments
+from .models import User, Payments, Invoice, Invoices
 from ..exceptions import MissingScopeError
 
 import json
@@ -9,6 +9,7 @@ import math
 import time
 import secrets
 import base64
+from urllib.parse import urlencode
 
 
 class AsyncLolzteamMarketPayment(RequestsClient):
@@ -36,6 +37,7 @@ class AsyncLolzteamMarketPayment(RequestsClient):
         }
         self.__base_url = "https://api.lzt.market"
         self.__get_method = "GET"
+        self.__post_method = "POST"
         self.__payment_name = "lolz"
 
     async def get_me(self) -> User:
@@ -54,6 +56,124 @@ class AsyncLolzteamMarketPayment(RequestsClient):
     def __get_random_string(self):
         return f"{time.time()}_{secrets.token_hex(random.randint(5, 10))}"
 
+    async def create_invoice(
+        self, 
+        amount: Union[int, float], 
+        payment_id: str, 
+        comment: str, 
+        url_success: str, 
+        merchant_id: str, 
+        currency: Optional[str] = "rub", 
+        url_callback: Optional[str] = None, 
+        lifetime: Optional[int] = 3600, 
+        additional_data: Optional[str] = None
+    ) -> Invoice:
+        """Create invoice.
+        
+        :param amount: Invoice amount.
+        :param payment_id: Payment ID in your system (must be unique within the merchant / invoices).
+        :param comment: Comment to the invoice.
+        :param url_success: URL to redirect to after successful payment.
+        :param merchant_id: Merchant ID.
+        :param currency: Optional. Currency that will be used to create the invoice. Defaults to 'rub'.
+        :param url_callback: Optional. Callback url.
+        :param lifetime: Optional. Invoice lifetime.
+        :param additional_data: Optional. Additional information for you.
+        
+        Docs: https://lzt-market.readme.io/reference/paymentsinvoicecreate
+        """
+        params = {
+            "amount": amount,
+            "payment_id": payment_id,
+            "comment": comment,
+            "url_success": url_success,
+            "merchant_id": merchant_id,
+            "currency": currency,
+            "url_callback": url_callback,
+            "lifetime": lifetime,
+            "additional_data": additional_data,
+        }
+        self._delete_empty_fields(params)
+        url = f"{self.__base_url}/invoice?{urlencode(params)}"
+
+        response = await self._request(
+            self.__payment_name,
+            self.__post_method,
+            url,
+            headers=self.__headers,
+        )
+        return Invoice(**response['invoice'])
+    
+    async def get_invoice(
+        self, 
+        invoice_id: Optional[str] = None, 
+        payment_id: Optional[str] = None
+    ) -> Invoice:
+        """Get invoice.
+        
+        :param invoice_id: Optional. Invoice ID.
+        :param payment_id: Optional. Payment ID.
+        
+        Docs: https://lzt-market.readme.io/reference/paymentsinvoiceget
+        """
+        
+        params = {
+            "invoice_id": invoice_id,
+            "payment_id": payment_id,
+        }
+        
+        self._delete_empty_fields(params)
+        
+        url = f"{self.__base_url}/invoice?{urlencode(params)}"
+
+        response = await self._request(
+            self.__payment_name,
+            self.__get_method,
+            url,
+            headers=self.__headers,
+        )
+        return Invoice(**response['data'])
+    
+    async def get_invoice_list(
+        self, 
+        page: Optional[int] = 1,
+        currency: Optional[str] = None,
+        status: Optional[str] = None,
+        amount: Optional[Union[float, int]] = None,
+        merchant_id: Optional[int] = None,
+    ) -> Invoices:
+        """Get invoice list.
+        
+        :param page: Optional. The number of the page to display results from.
+        :param currency: Optional. Currency of the created invoice.
+        :param status: Optional. Status of the invoice.
+        :param amount: Optional. Invoice amount.
+        :param merchant_id: Optional. Merchant ID.
+        
+        Docs: https://lzt-market.readme.io/reference/paymentsinvoicelist
+        """
+
+        url = f"{self.__base_url}/invoice/list"
+
+        params = {
+            "page": page,
+            "currency": currency,
+            "status": status,
+            "amount": amount,
+            "merchant_id": merchant_id,
+        }
+
+        self._delete_empty_fields(params)
+
+        response = await self._request(
+            self.__payment_name,
+            self.__get_method,
+            url,
+            headers=self.__headers,
+            params=params,
+        )
+        return Invoices(**response)
+    
     def get_payment_link(
         self,
         amount: Union[int, float],
@@ -61,7 +181,7 @@ class AsyncLolzteamMarketPayment(RequestsClient):
         is_hold: Optional[bool] = False,
         is_amount_ceiling: Optional[bool] = False,
     ) -> str:
-        """Get a link to transfer funds to the Lolzteam market.
+        """Get a link to transfer funds to the Lolzteam market. To accept payments, it is recommended to use the create_invoice() method.
 
         :param amount: Amount to transfer
         :param comment: Comment on the translation. If not specified: a random unique set of characters is generated.

@@ -7,21 +7,21 @@
 ## Installing
     pip install AsyncPayments
 ## Version
-    v1.4.6
+    v1.4.7
 ## Code example
 
 ```python
 import asyncio
 
-from AsyncPayments.ruKassa import AsyncRuKassa
-from AsyncPayments.lolz import AsyncLolzteamMarketPayment
-from AsyncPayments.aaio import AsyncAaio
-from AsyncPayments.cryptoBot import AsyncCryptoBot
-from AsyncPayments.crystalPay import AsyncCrystalPay
-from AsyncPayments.freeKassa import AsyncFreeKassa
-from AsyncPayments.payok import AsyncPayOK
-from AsyncPayments.cryptomus import AsyncCryptomus
-from AsyncPayments.xrocket import AsyncXRocket
+from AsyncPaymentsTest.ruKassa import AsyncRuKassa
+from AsyncPaymentsTest.lolz import AsyncLolzteamMarketPayment
+from AsyncPaymentsTest.aaio import AsyncAaio
+from AsyncPaymentsTest.cryptoBot import AsyncCryptoBot
+from AsyncPaymentsTest.crystalPay import AsyncCrystalPay
+from AsyncPaymentsTest.freeKassa import AsyncFreeKassa
+from AsyncPaymentsTest.payok import AsyncPayOK
+from AsyncPaymentsTest.cryptomus import AsyncCryptomus
+from AsyncPaymentsTest.xrocket import AsyncXRocket
 
 ruKassa = AsyncRuKassa(api_token="ApiToken", shop_id=1, email="Email", password="Password")
 lolz = AsyncLolzteamMarketPayment(token="Token")
@@ -79,10 +79,12 @@ async def main():
     print("Cryptomus:")
     print("Merchant:\n")
     for balance in balance_cryptomus.merchant:
-        print(f"Available {balance.currency_code}: {balance.balance} {balance.currency_code} ({balance.balance_usd} USD)")
+        print(
+            f"Available {balance.currency_code}: {balance.balance} {balance.currency_code} ({balance.balance_usd} USD)")
     print("\nUser:\n")
     for balance in balance_cryptomus.user:
-        print(f"Available {balance.currency_code}: {balance.balance} {balance.currency_code} ({balance.balance_usd} USD)")
+        print(
+            f"Available {balance.currency_code}: {balance.balance} {balance.currency_code} ({balance.balance_usd} USD)")
     print('--------------')
     print('XRocket:')
     for bal in balance.balances:
@@ -92,7 +94,7 @@ async def main():
     order_payok = await payok.create_pay(15, "orderId")
     order_freeKassa = await freeKassa.create_order(1, "example@gmail.com", "0.0.0.0", 150, "RUB")
     order_ruKassa = await ruKassa.create_payment(15)
-    order_lolz = lolz.get_payment_link(15, comment="orderId")
+    order_lolz = await lolz.create_invoice(15, "paymentId", "comment", "https://example.com", 1)
     order_aaio = await aaio.create_payment_url(15, "orderId")
     order_crypto_bot = await cryptoBot.create_invoice(15, currency_type="crypto", asset="USDT")
     order_crystal_pay = await crystalPay.create_payment(15)
@@ -102,7 +104,7 @@ async def main():
     print("PayOK", order_payok)
     print("FreeKassa", order_freeKassa.location)
     print("RuKassa: ", order_ruKassa.url)
-    print("Lolz: ":, order_lolz)
+    print("Lolz: ":, order_lolz.url)
     print("Aaio: ", order_aaio)
     print("CryptoBot: ", order_crypto_bot.pay_url)
     print("CrystalPay: ", order_crystal_pay.url)
@@ -114,7 +116,7 @@ async def main():
     info_payok = await payok.get_transactions("orderId")
     info_freeKassa = await freeKassa.get_orders("orderId")
     info_ruKassa = await ruKassa.get_info_payment("orderId")
-    info_lolz = await lolz.check_status_payment(50, "orderId")
+    info_lolz = await lolz.get_invoice(payment_id="paymentId")
     info_aaio = await aaio.get_order_info("orderId")
     info_crypto_bot = await cryptoBot.get_invoices(
         invoice_ids=["orderId"], count=1
@@ -136,8 +138,8 @@ async def main():
     print("Status: ", info_ruKassa.status)
     print('--------------')
     print("Lolz:")
-    print("Amount: ", 15)
-    print("Status: ", info_lolz)
+    print("Amount: ", info_lolz.amount)
+    print("Status: ", info_lolz.status)
     print('--------------')
     print("Aaio:")
     print("Amount: ", info_aaio.amount)
@@ -159,13 +161,12 @@ async def main():
     print("Amount": info_xrocket.amount)
     print("Status": info_xrocket.status)
 
-
 asyncio.run(main())
 ```
 ## Output
 ```Python
 PayOK:
-Ba;ance: 0
+Balance: 0
 Referral balance: 0.00
 --------------
 FreeKassa:
@@ -379,7 +380,7 @@ Available TRUMP: 0 TRUMP
 PayOK: https://payok.io//pay?amount=15&payment=4364575733&shop=12452&currency=RUB&desc=Description&sign=af2fdc6796750e3c6910230095ec0ed8
 FreeKassa: https://pay.freekassa.com/form/161328352/576046439bd01de60a6e418bad9354a2
 RuKassa:  https://pay.ruks.pro/?hash=435fc3cee737f9dac2b34c9ba9311eae
-Lolz:  https://lzt.market/balance/transfer?user_id=4810752&hold=0&amount=15&comment=orderId
+Lolz:  https://lzt.market/invoice/369/
 Aaio:  https://aaio.io/merchant/pay?merchant_id=f398c75d-b775-412c-9674-87939692c083&amount=15&order_id=orderId&currency=RUB&sign=6ad5dc2164059a255921ad216c7e5ffd0d2abcaec9af7415636fc12df938582f
 CryptoBot:  https://t.me/CryptoBot?start=IVYOJWPOZh15
 CrystalPay:  https://pay.crystalpay.io/?i=715308958_rPwTzvsvCmabwl
@@ -388,11 +389,11 @@ XRocket:  https://t.me/xrocket?start=inv_NX9RajMus37wbn3
 ------------------------------------------
 PayOK:
 Amount:  15
-Status: 0
+Status:  0
 --------------
 FreeKassa:
 Amount:  150
-Status: 0
+Status:  0
 --------------
 RuKassa:
 Amount:  50
@@ -400,7 +401,7 @@ Status:  WAIT
 --------------
 Lolz:
 Amount:  15
-Status:  False
+Status:  not_paid
 --------------
 Aaio:
 Amount:  299.0
@@ -415,11 +416,11 @@ Amount:  15
 Status:  notpayed
 --------------
 Cryptomus:
-Amount: 15.00
+Amount:  15.00
 Status:  check
 --------------
 XRocket:
-Amount: 1.0
+Amount:  1.0
 Status:  active
 
 ```
