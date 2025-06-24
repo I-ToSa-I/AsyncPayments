@@ -3,176 +3,176 @@ from typing import Optional, Union, List
 
 
 class Balance(BaseModel):
-    currency: str
-    balance: Union[int, float]
+    currency: Optional[str] = None
+    balance: Optional[Union[int, float]] = None
 
 
 class AppInfo(BaseModel):
-    name: str
-    feePercents: Union[int, float]
-    balances: List[Balance]
+    name: Optional[str] = None
+    feePercents: Optional[Union[int, float]] = None
+    balances: Optional[List[Balance]] = None
 
 
 class Transfer(BaseModel):
-    id: int
-    tgUserId: int
-    currency: str
-    amount: Union[int, float]
-    description: str
+    id: Optional[int] = None
+    tgUserId: Optional[int] = None
+    currency: Optional[str] = None
+    amount: Optional[Union[int, float]] = None
+    description: Optional[str] = None
 
 
 class Withdrawal(BaseModel):
-    network: str
-    address: str
-    currency: str
-    amount: Union[int, float]
-    withdrawalId: str
-    status: str
-    comment: str
-    txHash: str
-    txLink: str
+    network: Optional[str] = None
+    address: Optional[str] = None
+    currency: Optional[str] = None
+    amount: Optional[Union[int, float]] = None
+    withdrawalId: Optional[str] = None
+    status: Optional[str] = None
+    comment: Optional[str] = None
+    txHash: Optional[str] = None
+    txLink: Optional[str] = None
 
 
 class FeeWithdraw(BaseModel):
     fee: Optional[float] = None
-    currency: str
+    currency: Optional[str] = None
 
 
 class Fee(BaseModel):
-    networkCode: str
-    feeWithdraw: FeeWithdraw
+    networkCode: Optional[str] = None
+    feeWithdraw: Optional[FeeWithdraw] = None
 
 
 class WithdrawalFees(BaseModel):
-    code: str
-    minWithdraw: float
-    fees: List[Fee]
+    code: Optional[str] = None
+    minWithdraw: Optional[float] = None
+    fees: Optional[List[Fee]] = None
 
 
 class MultiCheque(BaseModel):
-    id: int
-    currency: str
-    total: int
-    perUser: int
-    users: int
-    password: str
-    description: str
-    sendNotifications: bool
-    captchaEnabled: bool
-    refProgramPercents: int
-    refRewardPerUser: float
-    state: str
-    link: str
-    disabledLanguages: list
-    enabledCountries: list
-    forPremium: int
-    forNewUsersOnly: int
-    linkedWallet: int
+    id: Optional[int] = None
+    currency: Optional[str] = None
+    total: Optional[int] = None
+    perUser: Optional[int] = None
+    users: Optional[int] = None
+    password: Optional[str] = None
+    description: Optional[str] = None
+    sendNotifications: Optional[bool] = None
+    captchaEnabled: Optional[bool] = None
+    refProgramPercents: Optional[int] = None
+    refRewardPerUser: Optional[float] = None
+    state: Optional[str] = None
+    link: Optional[str] = None
+    disabledLanguages: Optional[list] = None
+    enabledCountries: Optional[list] = None
+    forPremium: Optional[int] = None
+    forNewUsersOnly: Optional[int] = None
+    linkedWallet: Optional[int] = None
     tgResources: Optional[list] = None
     activations: Optional[int] = None
     refRewards: Optional[int] = None
 
 
 class MultiChequesList(BaseModel):
-    total: int
-    limit: int
-    offset: int
-    results: List[MultiCheque]
+    total: Optional[int] = None
+    limit: Optional[int] = None
+    offset: Optional[int] = None
+    results: Optional[List[MultiCheque]] = None
 
 
 class InvoicePayment(BaseModel):
-    userId: int
-    paymentNum: int
-    paymentAmount: int
-    comment: str
-    paid: str
+    userId: Optional[int] = None
+    paymentNum: Optional[int] = None
+    paymentAmount: Optional[int] = None
+    comment: Optional[str] = None
+    paid: Optional[str] = None
 
 
 class Invoice(BaseModel):
-    id: str
-    amount: Union[float, int]
+    id: Optional[str] = None
+    amount: Optional[Union[float, int]] = None
     minPayment: Optional[Union[float, int]] = None
-    totalActivations: int
-    activationsLeft: int
+    totalActivations: Optional[int] = None
+    activationsLeft: Optional[int] = None
     description: Optional[str] = None
     hiddenMessage: Optional[str] = None
     payload: Optional[str] = None
     callbackUrl: Optional[str] = None
-    commentsEnabled: Union[bool, int]
-    currency: str
+    commentsEnabled: Optional[Union[bool, int]] = None
+    currency: Optional[str] = None
     created: Optional[str] = None
     paid: Optional[str] = None
-    status: str
-    expiredIn: int
-    link: str
+    status: Optional[str] = None
+    expiredIn: Optional[int] = None
+    link: Optional[str] = None
     payments: Optional[List[InvoicePayment]] = []
 
 
 class InvoicesList(BaseModel):
-    total: int
-    limit: int
-    offset: int
-    results: List[Invoice]
+    total: Optional[int] = None
+    limit: Optional[int] = None
+    offset: Optional[int] = None
+    results: Optional[List[Invoice]] = None
 
 
 class Currency(BaseModel):
-    currency: str
-    name: str
-    minTransfer: Union[float, int]
-    minCheque: Union[float, int]
-    minInvoice: Union[float, int]
-    minWithdraw: Union[float, int]
-    feeWithdraw: dict
+    currency: Optional[str] = None
+    name: Optional[str] = None
+    minTransfer: Optional[Union[float, int]] = None
+    minCheque: Optional[Union[float, int]] = None
+    minInvoice: Optional[Union[float, int]] = None
+    minWithdraw: Optional[Union[float, int]] = None
+    feeWithdraw: Optional[dict] = None
 
 
 class Subscriptions:
     class Interval(BaseModel):
-        interval: str
-        amount: Union[float, int]
-        status: str
-        code: str
+        interval: Optional[str] = None
+        amount: Optional[Union[float, int]] = None
+        status: Optional[str] = None
+        code: Optional[str] = None
 
     class tgResource(BaseModel):
-        id: int
-        type_: str = Field(alias="type")
-        resourceId: str
-        name: str
-        linkedChat: str
+        id: Optional[int] = None
+        type_: Optional[str] = Field(alias="type", default=None)
+        resourceId: Optional[str] = None
+        name: Optional[str] = None
+        linkedChat: Optional[str] = None
 
 
 class Subscription(BaseModel):
-    id: int
-    name: str
-    description: str
-    currency: str
-    link: str
-    interval: Subscriptions.Interval
-    referralPercent: int
-    returnUrl: str
-    tgResource: Subscriptions.tgResource
+    id: Optional[int] = None
+    name: Optional[str] = None
+    description: Optional[str] = None
+    currency: Optional[str] = None
+    link: Optional[str] = None
+    interval: Optional[Subscriptions.Interval] = None
+    referralPercent: Optional[int] = None
+    returnUrl: Optional[str] = None
+    tgResource: Optional[Subscriptions.tgResource] = None
 
 
 class SubscriptionsList(BaseModel):
-    total: int
-    limit: int
-    offset: int
-    results: List[Subscription]
+    total: Optional[int] = None
+    limit: Optional[int] = None
+    offset: Optional[int] = None
+    results: Optional[List[Subscription]] = None
 
 
 class SubscriptionCheck(BaseModel):
-    subscriptionId: int
-    subscriptionCode: str
-    userId: int
-    amount: Union[float, int]
-    currency: str
-    interval: str
-    refFee: Union[float, int]
-    isRefPay: bool
-    totalAmount: Union[float, int]
-    paymentStart: str
-    paymentEnd: str
-    autoRenewal: bool
-    transactions: list
+    subscriptionId: Optional[int] = None
+    subscriptionCode: Optional[str] = None
+    userId: Optional[int] = None
+    amount: Optional[Union[float, int]] = None
+    currency: Optional[str] = None
+    interval: Optional[str] = None
+    refFee: Optional[Union[float, int]] = None
+    isRefPay: Optional[bool] = None
+    totalAmount: Optional[Union[float, int]] = None
+    paymentStart: Optional[str] = None
+    paymentEnd: Optional[str] = None
+    autoRenewal: Optional[bool] = None
+    transactions: Optional[list] = None
 
 
 class SubscriptionsStatutes:

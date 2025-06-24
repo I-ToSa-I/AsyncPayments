@@ -3,58 +3,58 @@ from typing import Optional, Union
 
 
 class Balance(BaseModel):
-    balance: int
-    ref_balance: Union[str, float, int]
+    balance: Optional[int] = None
+    ref_balance: Optional[Union[str, float, int]] = None
     
     
 class Transaction(BaseModel):
-    transaction: Union[str, int]
-    email: str
-    amount: Union[str, int]
-    currency: str
-    currency_amount: Union[str, int]
-    comission_percent: Union[str, int]
-    comission_fixed: str
-    amount_profit: Union[str, int]
+    transaction: Optional[Union[str, int]] = None
+    email: Optional[str] = None
+    amount: Optional[Union[str, int]] = None
+    currency: Optional[str] = None
+    currency_amount: Optional[Union[str, int]] = None
+    comission_percent: Optional[Union[str, int]] = None
+    comission_fixed: Optional[str] = None
+    amount_profit: Optional[Union[str, int]] = None
     method: Optional[str] = None
-    payment_id: Union[int, str]
-    description: str
-    date: str
-    pay_date: str
-    transaction_status: Union[str, int]
+    payment_id: Optional[Union[int, str]] = None
+    description: Optional[str] = None
+    date: Optional[str] = None
+    pay_date: Optional[str] = None
+    transaction_status: Optional[Union[str, int]] = None
     custom_fields: Optional[Union[str, int, dict]] = None
-    webhook_status: Union[str, int]
-    webhook_amount: Union[str, int]
+    webhook_status: Optional[Union[str, int]] = None
+    webhook_amount: Optional[Union[str, int]] = None
     
     
 class Payout(BaseModel):
-    payout: int
-    method: str
-    reciever: str
-    type: str
-    amount: int
-    comission_percent: int
-    comission_fixed: str
-    amount_profit: int
-    date_create: str
-    date_pay: str
-    status: int
+    payout: Optional[int] = None
+    method: Optional[str] = None
+    reciever: Optional[str] = None
+    type: Optional[str] = None
+    amount: Optional[int] = None
+    comission_percent: Optional[int] = None
+    comission_fixed: Optional[str] = None
+    amount_profit: Optional[int] = None
+    date_create: Optional[str] = None
+    date_pay: Optional[str] = None
+    status: Optional[int] = None
     
 
 class PayoutOnCreate(BaseModel):
-    payout_id: int
-    method: str
-    reciever: str
-    amount: int
-    comission_percent: int
-    comission_fixed: str
-    amount_profit: int
-    date: str
-    payout_status_code: int
-    payout_status_text: str
+    payout_id: Optional[int] = None
+    method: Optional[str] = None
+    reciever: Optional[str] = None
+    amount: Optional[int] = None
+    comission_percent: Optional[int] = None
+    comission_fixed: Optional[str] = None
+    amount_profit: Optional[int] = None
+    date: Optional[str] = None
+    payout_status_code: Optional[int] = None
+    payout_status_text: Optional[str] = None
     
     
 class CreatePayout(BaseModel):
-    remain_balance: Union[str, int, float]
-    payout: PayoutOnCreate
+    remain_balance: Optional[Union[str, int, float]] = None
+    payout: Optional[PayoutOnCreate] = None
     

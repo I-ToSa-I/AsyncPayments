@@ -3,210 +3,210 @@ from typing import Optional, Union, List
 
 
 class Balances(BaseModel):
-    merchant: list
-    user: list
+    merchant: Optional[list] = None
+    user: Optional[list] = None
 
 
 class Balance(BaseModel):
-    uuid: str
-    balance: str
-    currency_code: str
-    balance_usd: str
+    uuid: Optional[str] = None
+    balance: Optional[str] = None
+    currency_code: Optional[str] = None
+    balance_usd: Optional[str] = None
 
 
 class CreatePayment(BaseModel):
-    uuid: str
-    order_id: str
-    amount: str
+    uuid: Optional[str] = None
+    order_id: Optional[str] = None
+    amount: Optional[str] = None
     payment_amount: Optional[Union[str, int]] = None
     payment_amount_usd: Optional[Union[str, int]] = None
     payer_amount: Optional[Union[str, int]] = None
     payer_amount_exchange_rate: Optional[Union[str, int]] = None
     discount_percent: Optional[Union[str, int]] = None
-    discount: str
+    discount: Optional[str] = None
     payer_currency: Optional[Union[str, int]] = None
-    currency: str
+    currency: Optional[str] = None
     comments: Optional[Union[str, dict, list]] = None
     merchant_amount: Optional[Union[str, int]] = None
     network: Optional[str] = None
     address: Optional[str] = None
     from_: Optional[str] = Field(alias="from", default=None)
     txid: Optional[str] = None
-    payment_status: str
-    url: str
-    expired_at: int
-    status: str
-    is_final: bool
+    payment_status: Optional[str] = None
+    url: Optional[str] = None
+    expired_at: Optional[int] = None
+    status: Optional[str] = None
+    is_final: Optional[bool] = None
     aditional_data: Optional[str] = None
-    created_at: str
-    updated_at: str
+    created_at: Optional[str] = None
+    updated_at: Optional[str] = None
     commission: Optional[Union[str, int]] = None
     address_qr_code: Optional[str] = None
     mercuryo_payment_link: Optional[str] = None
 
 
 class GenerateStaticWallet(BaseModel):
-    wallet_uuid: str
-    uuid: str
-    address: str
-    network: str
-    currency: str
-    url: str
+    wallet_uuid: Optional[str] = None
+    uuid: Optional[str] = None
+    address: Optional[str] = None
+    network: Optional[str] = None
+    currency: Optional[str] = None
+    url: Optional[str] = None
     
 
 class GenerateQrCode(BaseModel):
-    image: str
+    image: Optional[str] = None
 
 
 class BlockStaticWallet(BaseModel):
-    uuid: str
-    status: str
+    uuid: Optional[str] = None
+    status: Optional[str] = None
 
 
 class RefundPaymentsOnBlockedAddress(BaseModel):
-    commission: str
-    amount: str
+    commission: Optional[str] = None
+    amount: Optional[str] = None
 
 
 class PaymentInfo(BaseModel):
-    uuid: str
-    order_id: str
-    amount: str
+    uuid: Optional[str] = None
+    order_id: Optional[str] = None
+    amount: Optional[str] = None
     payment_amount: Optional[str] = None
     payer_amount: Optional[str] = None
     discount_percent: Optional[Union[int, float, str]] = None
-    discount: str
+    discount: Optional[str] = None
     payer_currency: Optional[str] = None
-    currency: str
+    currency: Optional[str] = None
     merchant_amount: Optional[str] = None
     network: Optional[str] = None
     address: Optional[str] = None
     from_: Optional[str] = Field(alias="from", default=None)
     txid: Optional[str] = None
-    payment_status: str
-    url: str
-    expired_at: int
-    status: str
-    is_final: bool
+    payment_status: Optional[str] = None
+    url: Optional[str] = None
+    expired_at: Optional[int] = None
+    status: Optional[str] = None
+    is_final: Optional[bool] = None
     additional_data: Optional[str] = None
-    created_at: str
-    updated_at: str
+    created_at: Optional[str] = None
+    updated_at: Optional[str] = None
 
 
 class ServiceInfo:
     class ServiceLimit(BaseModel):
-        min_amount: str
-        max_amount: str
+        min_amount: Optional[str] = None
+        max_amount: Optional[str] = None
 
 
     class ServiceCommission(BaseModel):
-        fee_amount: str
-        percent: str
+        fee_amount: Optional[str] = None
+        percent: Optional[str] = None
 
 
 class ListOfServices(BaseModel):
-    network: str
-    currency: str
-    is_available: bool
-    limit: ServiceInfo.ServiceLimit
-    commission: ServiceInfo.ServiceCommission
+    network: Optional[str] = None
+    currency: Optional[str] = None
+    is_available: Optional[bool] = None
+    limit: Optional[ServiceInfo.ServiceLimit] = None
+    commission: Optional[ServiceInfo.ServiceCommission] = None
 
 
 class HistoryPaginate(BaseModel):
-    count: int
-    hasPages: bool
+    count: Optional[int] = None
+    hasPages: Optional[bool] = None
     nextCursor: Optional[str] = None
     previousCursor: Optional[str] = None
-    perPage: int
+    perPage: Optional[int] = None
 
 
 class PaymentHistory(BaseModel):
-    items: List[PaymentInfo]
-    paginate: HistoryPaginate
+    items: Optional[List[PaymentInfo]] = None
+    paginate: Optional[HistoryPaginate] = None
 
 
 class PayoutHistoryItem(BaseModel):
-    uuid: str
-    amount: str
-    currency: str
-    network: str
-    address: str
+    uuid: Optional[str] = None
+    amount: Optional[str] = None
+    currency: Optional[str] = None
+    network: Optional[str] = None
+    address: Optional[str] = None
     txid: Optional[str] = None
-    status: str
-    is_final: bool
-    balance: Union[str, int]
-    created_at: str
-    updated_at: str
+    status: Optional[str] = None
+    is_final: Optional[bool] = None
+    balance: Optional[Union[str, int]] = None
+    created_at: Optional[str] = None
+    updated_at: Optional[str] = None
 
 
 class PayoutHistory(BaseModel):
     merchant_uuid: Optional[str] = None
-    items: List[PayoutHistoryItem]
-    paginate: HistoryPaginate
+    items: Optional[List[PayoutHistoryItem]] = None
+    paginate: Optional[HistoryPaginate] = None
 
 
 class Payout(BaseModel):
-    uuid: str
-    amount: str
-    currency: str
-    network: str
-    address: str
+    uuid: Optional[str] = None
+    amount: Optional[str] = None
+    currency: Optional[str] = None
+    network: Optional[str] = None
+    address: Optional[str] = None
     txid: Optional[str] = None
-    status: str
-    is_final: bool
-    balance: Union[str, int]
-    payer_currency: str
-    payer_amount: Union[str, int]
+    status: Optional[str] = None
+    is_final: Optional[bool] = None
+    balance: Optional[Union[str, int]] = None
+    payer_currency: Optional[str] = None
+    payer_amount: Optional[Union[str, int]] = None
 
 
 class ListOfServicesPayout(BaseModel):
-    network: str
-    currency: str
-    is_available: bool
-    limit: ServiceInfo.ServiceLimit
-    commission: ServiceInfo.ServiceCommission
+    network: Optional[str] = None
+    currency: Optional[str] = None
+    is_available: Optional[bool] = None
+    limit: Optional[ServiceInfo.ServiceLimit] = None
+    commission: Optional[ServiceInfo.ServiceCommission] = None
 
 
 class TransferWallet(BaseModel):
-    user_wallet_transaction_uuid: str
-    user_wallet_balance: str
-    merchant_transaction_uuid: str
-    merchant_balance: str
+    user_wallet_transaction_uuid: Optional[str] = None
+    user_wallet_balance: Optional[str] = None
+    merchant_transaction_uuid: Optional[str] = None
+    merchant_balance: Optional[str] = None
 
 
 class RecurringPayment(BaseModel):
-    uuid: str
-    name: str
+    uuid: Optional[str] = None
+    name: Optional[str] = None
     order_id: Optional[str] = None
-    amount: str
-    currency: str
-    payer_currency: str
-    payer_amount_usd: str
-    payer_amount: str
+    amount: Optional[str] = None
+    currency: Optional[str] = None
+    payer_currency: Optional[str] = None
+    payer_amount_usd: Optional[str] = None
+    payer_amount: Optional[str] = None
     url_callback: Optional[str] = None
-    period: str
-    status: str
-    url: str
+    period: Optional[str] = None
+    status: Optional[str] = None
+    url: Optional[str] = None
     last_pay_off: Optional[str] = None
     additional_data: Optional[str] = None
 
 
 class ListOfRecurringPayments(BaseModel):
     merchant_uuid: Optional[str] = None
-    items: List[RecurringPayment]
-    paginate: HistoryPaginate
+    items: Optional[List[RecurringPayment]] = None
+    paginate: Optional[HistoryPaginate] = None
 
 
 class ExchangeRatesList(BaseModel):
     from_: Optional[str] = Field(alias="from", default=None)
-    to: str
-    course: str
+    to: Optional[str] = None
+    course: Optional[str] = None
 
 
 class Discount(BaseModel):
-    currency: str
-    network: str
-    discount: Union[str, int, float]
+    currency: Optional[str] = None
+    network: Optional[str] = None
+    discount: Optional[Union[str, int, float]] = None
 
 
 class CurrenciesNames:

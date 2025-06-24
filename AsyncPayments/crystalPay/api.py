@@ -1,7 +1,7 @@
 from ..requests import RequestsClient
 from typing import Optional, Union, List
 from .models import CreatePayment, CassaInfo, PayoffCreate, TickersRate, PayoffRequest, \
-                    PaymentInfo, BalancesList, Balance, Methods, Method, SwapPair, \
+                    PaymentInfo, Balance, SwapPair, \
                     CreateSwap, SwapInfo, CreateTransfer, TransferInfo, Stats
 import json
 import hashlib
@@ -49,7 +49,7 @@ class AsyncCrystalPay(RequestsClient):
 
         return CassaInfo(**response)
 
-    async def get_balance_list(self, hide_empty: Optional[bool] = False) -> BalancesList:
+    async def get_balance_list(self, hide_empty: Optional[bool] = False) -> dict:
         """Get balances list.
 
         Docs: https://docs.crystalpay.io/metody-api/balance-balansy/poluchenie-spiska-balansov
@@ -65,7 +65,7 @@ class AsyncCrystalPay(RequestsClient):
         }
         response = await self._request(self.__payment_name, self.__post_method, url, headers=self.__headers, data=json.dumps(params))
         if response['items']:
-            return BalancesList(**response['items'])
+            return response['items']
         else:
             return []
     
@@ -86,7 +86,7 @@ class AsyncCrystalPay(RequestsClient):
         response = await self._request(self.__payment_name, self.__post_method, url, headers=self.__headers, data=json.dumps(params))
         return Balance(**response)
     
-    async def get_payment_methods(self, compact: Optional[bool] = False) -> Methods:
+    async def get_payment_methods(self, compact: Optional[bool] = False) -> dict:
         """Get list of a methods.
 
         Docs: https://docs.crystalpay.io/metody-api/method-metody/poluchenie-spiska-metodov
@@ -101,11 +101,11 @@ class AsyncCrystalPay(RequestsClient):
             "compact": compact,
         }
         response = await self._request(self.__payment_name, self.__post_method, url, headers=self.__headers, data=json.dumps(params))
-
-        return Methods(**response['items'])
+        
+        return response['items']
     
     
-    async def get_payment_method(self, method: str) -> Method:
+    async def get_payment_method(self, method: str) -> dict:
         """Get info about a method.
 
         Docs: https://docs.crystalpay.io/metody-api/method-metody/poluchenie-metoda
@@ -121,7 +121,7 @@ class AsyncCrystalPay(RequestsClient):
         }
         response = await self._request(self.__payment_name, self.__post_method, url, headers=self.__headers, data=json.dumps(params))
 
-        return Method(**response)
+        return response
         
 
     async def edit_payment_method(self, method: str, extra_commission_percent: Union[int, float], enabled: bool) -> bool:

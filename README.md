@@ -6,22 +6,22 @@
 > Add payment acceptance to your projects.
 ## Installing
     pip install AsyncPayments
-## Version
-    v1.4.7
+## Last version
+    v1.4.8
 ## Code example
 
 ```python
 import asyncio
 
-from AsyncPaymentsTest.ruKassa import AsyncRuKassa
-from AsyncPaymentsTest.lolz import AsyncLolzteamMarketPayment
-from AsyncPaymentsTest.aaio import AsyncAaio
-from AsyncPaymentsTest.cryptoBot import AsyncCryptoBot
-from AsyncPaymentsTest.crystalPay import AsyncCrystalPay
-from AsyncPaymentsTest.freeKassa import AsyncFreeKassa
-from AsyncPaymentsTest.payok import AsyncPayOK
-from AsyncPaymentsTest.cryptomus import AsyncCryptomus
-from AsyncPaymentsTest.xrocket import AsyncXRocket
+from AsyncPayments.ruKassa import AsyncRuKassa
+from AsyncPayments.lolz import AsyncLolzteamMarketPayment
+from AsyncPayments.aaio import AsyncAaio
+from AsyncPayments.cryptoBot import AsyncCryptoBot
+from AsyncPayments.crystalPay import AsyncCrystalPay
+from AsyncPayments.freeKassa import AsyncFreeKassa
+from AsyncPayments.payok import AsyncPayOK
+from AsyncPayments.cryptomus import AsyncCryptomus
+from AsyncPayments.xrocket import AsyncXRocket
 
 ruKassa = AsyncRuKassa(api_token="ApiToken", shop_id=1, email="Email", password="Password")
 lolz = AsyncLolzteamMarketPayment(token="Token")
@@ -73,8 +73,8 @@ async def main():
         print(f"Available {balance.currency_code}: ", balance.available, f" (In hold: {balance.onhold})")
     print('--------------')
     print("CrystalPay:")
-    for currency, balance in balance_crystal_pay:
-        print(f"Available {currency}: {balance.amount} {balance.currency}")
+    for currency, balance in balance_crystal_pay.items():
+        print(f"Available {currency}: {balance['amount']} {balance['currency']}")
     print('--------------')
     print("Cryptomus:")
     print("Merchant:\n")
@@ -207,6 +207,7 @@ Available BITCOINCASH: 0 BCH
 Available BNBCRYPTOBOT: 0 BNB
 Available BNBSMARTCHAIN: 0 BNB
 Available BTCCRYPTOBOT: 0 BTC
+Available CARDKZTP2P: 0 KZT
 Available CARDRUBP2P: 0 RUB
 Available DASH: 0 DASH
 Available DOGECOIN: 0 DOGE
@@ -215,14 +216,20 @@ Available ETHEREUM: 0 ETH
 Available LITECOIN: 0 LTC
 Available LTCCRYPTOBOT: 0 LTC
 Available LZTMARKET: 0 RUB
-Available POLYGON: 0 MATIC
+Available MONERO: 0 XMR
+Available POLYGON: 0 POL
 Available SBERPAYP2P: 0 RUB
 Available SBPP2P: 0 RUB
+Available SBPTRANSP2P: 0 RUB
+Available SOLANA: 0 SOL
 Available TONCOIN: 0 TON
 Available TONCRYPTOBOT: 0 TON
 Available TRON: 0 TRX
-Available USDCTRC: 0 USDC
+Available USDCSPL: 0 USDC
+Available USDTBEP: 0 USDT
 Available USDTCRYPTOBOT: 0 USDT
+Available USDTPOL: 0 USDT
+Available USDTSPL: 0 USDT
 Available USDTTRC: 0 USDT
 --------------
 Cryptomus:

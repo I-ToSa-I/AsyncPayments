@@ -3,17 +3,17 @@ from typing import List, Optional
 
 
 class MeInfo(BaseModel):
-    app_id: int
-    name: str
-    payment_processing_bot_username: str
+    app_id: Optional[int] = None
+    name: Optional[str] = None
+    payment_processing_bot_username: Optional[str] = None
 
 class Invoice(BaseModel):
-    invoice_id: int
-    hash: str
-    currency_type: str
+    invoice_id: Optional[int] = None
+    hash: Optional[str] = None
+    currency_type: Optional[str] = None
     asset: Optional[str] = None
     fiat: Optional[str] = None
-    amount: str
+    amount: Optional[str] = None
     paid_asset: Optional[str] = None
     paid_amount: Optional[str] = None
     paid_fiat_rate: Optional[str] = None
@@ -21,15 +21,15 @@ class Invoice(BaseModel):
     fee_asset: Optional[str] = None
     fee_amount: Optional[float] = None
     fee: Optional[str] = None
-    bot_invoice_url: str
-    pay_url: str
+    bot_invoice_url: Optional[str] = None
+    pay_url: Optional[str] = None
     description: Optional[str] = None
-    status: str
-    created_at: str
+    status: Optional[str] = None
+    created_at: Optional[str] = None
     paid_usd_rate: Optional[str] = None
     usd_rate: Optional[str] = None
-    allow_comments: bool
-    allow_anonymous: bool
+    allow_comments: Optional[bool] = None
+    allow_anonymous: Optional[bool] = None
     expiration_date: Optional[str] = None
     paid_at: Optional[str] = None
     paid_anonymously: Optional[bool] = None
@@ -40,42 +40,42 @@ class Invoice(BaseModel):
     paid_btn_url: Optional[str] = None
 
 class Check(BaseModel):
-    check_id: int
-    hash: str
-    asset: str
-    amount: float
-    bot_check_url: str
-    status: str
-    created_at: str
-    activated_at: str
+    check_id: Optional[int] = None
+    hash: Optional[str] = None
+    asset: Optional[str] = None
+    amount: Optional[float] = None
+    bot_check_url: Optional[str] = None
+    status: Optional[str] = None
+    created_at: Optional[str] = None
+    activated_at: Optional[str] = None
 
 class Transfer(BaseModel):
-    transfer_id: int
-    user_id: int
-    asset: str
-    amount: float
-    status: str
-    completed_at: str
+    transfer_id: Optional[int] = None
+    user_id: Optional[int] = None
+    asset: Optional[str] = None
+    amount: Optional[float] = None
+    status: Optional[str] = None
+    completed_at: Optional[str] = None
     comment: Optional[str] = None
 
 class Balance(BaseModel):
-    currency_code: str
-    available: float
-    onhold: float
+    currency_code: Optional[str] = None
+    available: Optional[float] = None
+    onhold: Optional[float] = None
 
 class ExchangeRate(BaseModel):
-    is_valid: bool
-    is_crypto: bool
-    is_fiat: bool
-    source: str
-    target: str
-    rate: float
+    is_valid: Optional[bool] = None
+    is_crypto: Optional[bool] = None
+    is_fiat: Optional[bool] = None
+    source: Optional[str] = None
+    target: Optional[str] = None
+    rate: Optional[float] = None
 
 class Currency(BaseModel):
-    is_blockchain: bool
-    is_stablecoin: bool
-    is_fiat: bool
-    name: str
-    code: str
+    is_blockchain: Optional[bool] = None
+    is_stablecoin: Optional[bool] = None
+    is_fiat: Optional[bool] = None
+    name: Optional[str] = None
+    code: Optional[str] = None
     url: Optional[str] = None
-    decimals: int
+    decimals: Optional[int] = None

@@ -3,210 +3,150 @@ from typing import Optional
 
 
 class CassaInfo(BaseModel):
-    id: int
-    name: str
-    status_level: int
-    created_at: str
+    id: Optional[int] = None
+    name: Optional[str] = None
+    status_level: Optional[int] = None
+    created_at: Optional[str] = None
 
 
 class BalanceListField(BaseModel):
-    name: str
-    amount: str
-    currency: str
-    amount_accuracy: int
-    
-    
-class Method(BaseModel):
-    name: str
-    currency: str
-    amount_accuracy: int
-    minimal_status_level: int
-    settings: dict
-    in_: Optional[dict] = Field(alias="in", default=None)
-    out: Optional[dict] = None
-    
-
-class Methods(BaseModel):
-    BITCOIN: Method
-    BITCOINCASH: Method
-    BNBCRYPTOBOT: Method
-    BNBSMARTCHAIN: Method
-    BTCCRYPTOBOT: Method
-    CARDRUBP2P: Method
-    DASH: Method
-    DOGECOIN: Method
-    ETHCRYPTOBOT: Method
-    ETHEREUM: Method
-    LITECOIN: Method
-    LTCCRYPTOBOT: Method
-    LZTMARKET: Method
-    POLYGON: Method
-    SBERPAYP2P: Method
-    SBPP2P: Method
-    TONCOIN: Method
-    TONCRYPTOBOT: Method
-    TRON: Method
-    USDCTRC: Method
-    USDTCRYPTOBOT: Method
-    USDTTRC: Method
-
-
-class BalancesList(BaseModel):
-    BITCOIN: BalanceListField
-    BITCOINCASH: BalanceListField
-    BNBCRYPTOBOT: BalanceListField
-    BNBSMARTCHAIN: BalanceListField
-    BTCCRYPTOBOT: BalanceListField
-    CARDRUBP2P: BalanceListField
-    DASH: BalanceListField
-    DOGECOIN: BalanceListField
-    ETHCRYPTOBOT: BalanceListField
-    ETHEREUM: BalanceListField
-    LITECOIN: BalanceListField
-    LTCCRYPTOBOT: BalanceListField
-    LZTMARKET: BalanceListField
-    POLYGON: BalanceListField
-    SBERPAYP2P: BalanceListField
-    SBPP2P: BalanceListField
-    TONCOIN: BalanceListField
-    TONCRYPTOBOT: BalanceListField
-    TRON: BalanceListField
-    USDCTRC: BalanceListField
-    USDTCRYPTOBOT: BalanceListField
-    USDTTRC: BalanceListField
+    name: Optional[str] = None
+    amount: Optional[str] = None
+    currency: Optional[str] = None
+    amount_accuracy: Optional[int] = None
 
 
 class CreatePayment(BaseModel):
-    id: str
-    url: str
-    type_: str = Field(alias="type")
-    rub_amount: str
+    id: Optional[str] = None
+    url: Optional[str] = None
+    type_: Optional[str] = Field(alias="type", default=None)
+    rub_amount: Optional[str] = None
 
 
 class Balance(BaseModel):
-    method: str
-    name: str
-    amount: str
-    currency: str
-    amount_accuracy: int
+    method: Optional[str] = None
+    name: Optional[str] = None
+    amount: Optional[str] = None
+    currency: Optional[str] = None
+    amount_accuracy: Optional[int] = None
 
 
 class PaymentInfo(BaseModel):
-    id: str
-    url: str
-    state: str
-    type_: str = Field(alias="type")
+    id: Optional[str] = None
+    url: Optional[str] = None
+    state: Optional[str] = None
+    type_: Optional[str] = Field(alias="type", default=None)
     method: Optional[str] = None
     required_method: Optional[str] = None
-    amount_currency: str
-    rub_amount: str
-    initial_amount: str
-    remaining_amount: str
-    balance_amount: str
-    commission_amount: str
+    amount_currency: Optional[str] = None
+    rub_amount: Optional[str] = None
+    initial_amount: Optional[str] = None
+    remaining_amount: Optional[str] = None
+    balance_amount: Optional[str] = None
+    commission_amount: Optional[str] = None
     description: Optional[str] = None
     redirect_url: Optional[str] = None
     callback_url: Optional[str] = None
     extra: Optional[str] = None
-    created_at: str
-    expired_at: str
+    created_at: Optional[str] = None
+    expired_at: Optional[str] = None
     final_at: Optional[str] = None
 
 
 class PayoffCreate(BaseModel):
-    id: str
-    method: str
-    commission_amount: str
-    amount: str
-    rub_amount: str
-    receive_amount: str
-    deduction_amount: str
-    subtract_from: str
-    amount_currency: str
-    wallet: str
+    id: Optional[str] = None
+    method: Optional[str] = None
+    commission_amount: Optional[str] = None
+    amount: Optional[str] = None
+    rub_amount: Optional[str] = None
+    receive_amount: Optional[str] = None
+    deduction_amount: Optional[str] = None
+    subtract_from: Optional[str] = None
+    amount_currency: Optional[str] = None
+    wallet: Optional[str] = None
 
 
 class PayoffRequest(BaseModel):
-    id: str
-    state: str
-    method: str
-    amount: str
-    amount_currency: str
-    commission_amount: str
-    rub_amount: str
-    receive_amount: str
-    deduction_amount: str
-    subtract_from: str
-    wallet: str
+    id: Optional[str] = None
+    state: Optional[str] = None
+    method: Optional[str] = None
+    amount: Optional[str] = None
+    amount_currency: Optional[str] = None
+    commission_amount: Optional[str] = None
+    rub_amount: Optional[str] = None
+    receive_amount: Optional[str] = None
+    deduction_amount: Optional[str] = None
+    subtract_from: Optional[str] = None
+    wallet: Optional[str] = None
     message: Optional[str] = None
     callback_url: Optional[str] = None
     extra: Optional[str] = None
-    created_at: str
+    created_at: Optional[str] = None
     final_at: Optional[str] = None
     
 
 class SwapPair(BaseModel):
     pair_id: Optional[int] = None
-    source: dict
-    target: dict
-    price: str
+    source: Optional[dict] = None
+    target: Optional[dict] = None
+    price: Optional[str] = None
 
 
 class CreateSwap(BaseModel):
-    id: str
-    pair_id: int
-    amount_type: str
-    amount: str
-    source: dict
-    target: dict
-    price: str
+    id: Optional[str] = None
+    pair_id: Optional[int] = None
+    amount_type: Optional[str] = None
+    amount: Optional[str] = None
+    source: Optional[dict] = None
+    target: Optional[dict] = None
+    price: Optional[str] = None
     
 
 class SwapInfo(BaseModel):
-    id: str
-    state: str
-    pair_id: int
-    amount_type: str
-    amount: str
-    source: dict
-    target: dict
-    price: str
-    created_at: str
-    expired_at: str
+    id: Optional[str] = None
+    state: Optional[str] = None
+    pair_id: Optional[int] = None
+    amount_type: Optional[str] = None
+    amount: Optional[str] = None
+    source: Optional[dict] = None
+    target: Optional[dict] = None
+    price: Optional[str] = None
+    created_at: Optional[str] = None
+    expired_at: Optional[str] = None
     final_at: Optional[str] = None
 
 
 class TickersRate(BaseModel):
-    base_currency: str
-    currencies: dict
+    base_currency: Optional[str] = None
+    currencies: Optional[dict] = None
     
     
 class CreateTransfer(BaseModel):
-    id: int
-    method: str
-    amount_currency: str
-    amount: str
-    sender: str
-    receiver: str
+    id: Optional[int] = None
+    method: Optional[str] = None
+    amount_currency: Optional[str] = None
+    amount: Optional[str] = None
+    sender: Optional[str] = None
+    receiver: Optional[str] = None
     
     
 class TransferInfo(BaseModel):
-    id: int
-    state: str
-    type_: str = Field(alias="type")
-    method: str
-    amount_currency: str
-    amount: str
-    sender: str
-    receiver: str
+    id: Optional[int] = None
+    state: Optional[str] = None
+    type_: Optional[str] = Field(alias="type", default=None)
+    method: Optional[str] = None
+    amount_currency: Optional[str] = None
+    amount: Optional[str] = None
+    sender: Optional[str] = None
+    receiver: Optional[str] = None
     description: Optional[str] = None
-    created_at: str
-    final_at: str
+    created_at: Optional[str] = None
+    final_at: Optional[str] = None
     
     
 class Stats(BaseModel):
-    payed_rub_amount: str
-    payed_count: int
-    total_count: int
-    conversion_percent: int
+    payed_rub_amount: Optional[str] = None
+    payed_count: Optional[int] = None
+    total_count: Optional[int] = None
+    conversion_percent: Optional[int] = None
     
