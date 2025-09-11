@@ -278,7 +278,7 @@ class AsyncLolzteamMarketPayment(RequestsClient):
         :return: True if payment has been received. Otherwise False"""
         payments = (
             await self.get_history_payments(
-                operation_type="receiving_money",
+                operation_type="invoice",
                 comment=comment,
                 pmin=pay_amount,
                 pmax=pay_amount,
