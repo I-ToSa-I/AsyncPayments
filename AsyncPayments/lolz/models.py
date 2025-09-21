@@ -22,11 +22,14 @@ class Invoice(BaseModel):
     additional_data: Optional[str] = None
     url_success: Optional[str] = None
     url_callback: Optional[str] = None
+    is_test: Optional[bool] = None
     expires_at: Optional[int] = None
     user_id: Optional[int] = None
     invoice_date: Optional[int] = None
     status: Optional[str] = None
     paid_date: Optional[int] = None
+    payer_user_id: Optional[int] = None
+    resend_attempts: Optional[int] = None
     invoice_id: Optional[int] = None
     url: Optional[str] = None
     

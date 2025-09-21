@@ -66,7 +66,8 @@ class AsyncLolzteamMarketPayment(RequestsClient):
         currency: Optional[str] = "rub", 
         url_callback: Optional[str] = None, 
         lifetime: Optional[int] = 3600, 
-        additional_data: Optional[str] = None
+        additional_data: Optional[str] = None,
+        is_test: Optional[bool] = False,
     ) -> Invoice:
         """Create invoice.
         
@@ -92,6 +93,7 @@ class AsyncLolzteamMarketPayment(RequestsClient):
             "url_callback": url_callback,
             "lifetime": lifetime,
             "additional_data": additional_data,
+            "is_test": is_test,
         }
         self._delete_empty_fields(params)
         url = f"{self.__base_url}/invoice?{urlencode(params)}"
@@ -132,7 +134,7 @@ class AsyncLolzteamMarketPayment(RequestsClient):
             url,
             headers=self.__headers,
         )
-        return Invoice(**response['data'])
+        return Invoice(**response['invoice'])
     
     async def get_invoice_list(
         self, 
