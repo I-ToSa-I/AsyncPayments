@@ -7,7 +7,7 @@
 ## Installing
     pip install AsyncPayments
 ## Last version
-    v1.4.9
+    v1.4.9.1
 ## Code example
 
 ```python

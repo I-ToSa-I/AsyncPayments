@@ -80,6 +80,7 @@ class AsyncLolzteamMarketPayment(RequestsClient):
         :param url_callback: Optional. Callback url.
         :param lifetime: Optional. Invoice lifetime.
         :param additional_data: Optional. Additional information for you.
+        :param is_test: Optional. Create a test invoice.
         
         Docs: https://lzt-market.readme.io/reference/paymentsinvoicecreate
         """
@@ -96,13 +97,14 @@ class AsyncLolzteamMarketPayment(RequestsClient):
             "is_test": is_test,
         }
         self._delete_empty_fields(params)
-        url = f"{self.__base_url}/invoice?{urlencode(params)}"
+        url = f"{self.__base_url}/invoice"
 
         response = await self._request(
             self.__payment_name,
             self.__post_method,
             url,
             headers=self.__headers,
+            json=params,
         )
         return Invoice(**response['invoice'])
     
