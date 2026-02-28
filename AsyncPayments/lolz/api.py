@@ -1,7 +1,7 @@
 from ..requests import RequestsClient
 from typing import Optional, Union
 from .models import User, Payments, Invoice, Invoices
-from ..exceptions import MissingScopeError
+from ..exceptions import MissingScopeError, IncorrectTokenError, UnexpectedError
 
 import json
 import random
@@ -22,9 +22,17 @@ class AsyncLolzteamMarketPayment(RequestsClient):
         """
         super().__init__()
         self.__token = token
-        jwt_payload = json.loads(
-            base64.b64decode(token.split(".")[1] + "==").decode("utf-8")
-        )
+        try:
+            jwt_payload = json.loads(
+                base64.b64decode(token.split(".")[1] + "==").decode("utf-8")
+            )
+        except IndexError:
+            raise IncorrectTokenError(
+                "You have specified an incorrect token."
+            )
+        except Exception as error:
+            raise UnexpectedError(error)
+            
         self.__user_id = jwt_payload["sub"]
         if jwt_payload.get("scope"):
             if "market" not in jwt_payload["scope"]:
@@ -68,6 +76,8 @@ class AsyncLolzteamMarketPayment(RequestsClient):
         lifetime: Optional[int] = 3600, 
         additional_data: Optional[str] = None,
         is_test: Optional[bool] = False,
+        required_telegram_id: Optional[int] = None,
+        required_telegram_username: Optional[str] = None
     ) -> Invoice:
         """Create invoice.
         
@@ -81,6 +91,8 @@ class AsyncLolzteamMarketPayment(RequestsClient):
         :param lifetime: Optional. Invoice lifetime.
         :param additional_data: Optional. Additional information for you.
         :param is_test: Optional. Create a test invoice.
+        :param required_telegram_id: Optional. Telegram User ID for which the invoice was created.
+        :param required_telegram_username: Optional. Telegram Username (including @) for which the invoice was created (if any).
         
         Docs: https://lzt-market.readme.io/reference/paymentsinvoicecreate
         """
@@ -95,6 +107,8 @@ class AsyncLolzteamMarketPayment(RequestsClient):
             "lifetime": lifetime,
             "additional_data": additional_data,
             "is_test": is_test,
+            "required_telegram_id": required_telegram_id,
+            "required_telegram_username": required_telegram_username,
         }
         self._delete_empty_fields(params)
         url = f"{self.__base_url}/invoice"

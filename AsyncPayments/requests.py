@@ -1,7 +1,7 @@
 import ssl
 import certifi
 from typing import Optional
-from aiohttp import ClientSession, TCPConnector
+from aiohttp import ClientSession, TCPConnector, ClientResponse
 from .exceptions.exceptions import BadRequest, RequestError
 
 
@@ -27,6 +27,12 @@ class RequestsClient:
             if value is None:
                 params.pop(key)
 
+    async def _request_for_authorize_yoomoney(self, method: str, url: str, **kwargs) -> ClientResponse:
+        session = self._getsession()
+        async with session.request(method, url, **kwargs) as response:
+            await self._session.close()
+            return response
+    
     async def _request(self, payment: str, method: str, url: str, **kwargs) -> dict:
         session = self._getsession()
 
@@ -37,11 +43,19 @@ class RequestsClient:
                     response = await response.json(content_type="text/html")
                 elif payment in ['payok']:
                     response = await response.json(content_type="text/plain")
+                elif payment == "yoomoney_quick-pay":
+                    response = response.url
                 else:
                     response = await response.json()
             else:
                 try:
-                    return await self._checkexception(payment, await response.json())
+                    response_json = await response.json()
+                    if response_json:
+                        return await self._checkexception(payment, response_json)
+                    else:
+                        raise RequestError(
+                            f"{payment}. Response status: {response.status}. Text: {await response.text()}"
+                        )
                 except:
                     raise RequestError(
                         f"{payment}. Response status: {response.status}. Text: {await response.text()}"
@@ -87,6 +101,9 @@ class RequestsClient:
                 raise BadRequest(text)
             else:
                 raise BadRequest(f"[XRocket] Status code: {response.get('statusCode')}. Message: " + response.get("message"))
+        elif payment == "yoomoney":
+            if response.get("error"):
+                raise BadRequest("[YooMoney] " + response.get("error_description") + ". Error code: " + response['error'])
         else:
             # payok
             if response.get("status") and response.pop("status") == "error":
