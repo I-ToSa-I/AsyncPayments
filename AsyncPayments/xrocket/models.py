@@ -83,7 +83,7 @@ class MultiChequesList(BaseModel):
 class InvoicePayment(BaseModel):
     userId: Optional[int] = None
     paymentNum: Optional[int] = None
-    paymentAmount: Optional[int] = None
+    paymentAmount: Optional[Union[int, float, str]] = None
     comment: Optional[str] = None
     paid: Optional[str] = None
 

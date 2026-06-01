@@ -7,7 +7,7 @@
 ## Installing
     pip install AsyncPayments
 ## Last version
-    v1.5
+    v1.5.1
 ## Code example
 
 ```python
@@ -22,9 +22,9 @@ from AsyncPayments.freeKassa import AsyncFreeKassa
 from AsyncPayments.payok import AsyncPayOK
 from AsyncPayments.cryptomus import AsyncCryptomus
 from AsyncPayments.xrocket import AsyncXRocket
-from AsyncPaymentsTest.yoomoney import AsyncYoomoney
-from AsyncPaymentsTest.apays import AsyncAPays
-from AsyncPaymentsTest.platega import AsyncPlatega
+from AsyncPayments.yoomoney import AsyncYoomoney
+from AsyncPayments.apays import AsyncAPays
+from AsyncPayments.platega import AsyncPlatega
 
 ruKassa = AsyncRuKassa(api_token="ApiToken", shop_id=1, email="Email", password="Password")
 lolz = AsyncLolzteamMarketPayment(token="Token")
