@@ -6,7 +6,6 @@ from .exceptions.exceptions import BadRequest, RequestError
 
 
 class RequestsClient:
-
     def __init__(self) -> None:
         self._session: Optional[ClientSession] = None
 
@@ -35,7 +34,6 @@ class RequestsClient:
     
     async def _request(self, payment: str, method: str, url: str, **kwargs) -> dict:
         session = self._getsession()
-
         async with session.request(method, url, **kwargs) as response:
             await self._session.close()
             if response.status in [200, 201]:
@@ -104,9 +102,12 @@ class RequestsClient:
         elif payment == "yoomoney":
             if response.get("error"):
                 raise BadRequest("[YooMoney] " + response.get("error_description") + ". Error code: " + response['error'])
+        elif payment == "2328io":
+            if response.get("state") == 1:
+                raise BadRequest("[2328.io] " + str(response.get("errors")))
         else:
-            # payok
-            if response.get("status") and response.pop("status") == "error":
-                raise BadRequest("[PayOK] " + response.get("text", response.get("error_text")) + ". Error code: " + response['error_code'])
+            # RollyPay
+            if response.get("error"):
+                raise BadRequest("[RollyPay] " + response['error'])
 
         return response

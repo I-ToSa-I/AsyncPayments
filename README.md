@@ -7,7 +7,7 @@
 ## Installing
     pip install AsyncPayments
 ## Last version
-    v1.5.1
+    v1.6
 ## Code example
 
 ```python
@@ -19,12 +19,13 @@ from AsyncPayments.aaio import AsyncAaio
 from AsyncPayments.cryptoBot import AsyncCryptoBot
 from AsyncPayments.crystalPay import AsyncCrystalPay
 from AsyncPayments.freeKassa import AsyncFreeKassa
-from AsyncPayments.payok import AsyncPayOK
 from AsyncPayments.cryptomus import AsyncCryptomus
 from AsyncPayments.xrocket import AsyncXRocket
 from AsyncPayments.yoomoney import AsyncYoomoney
 from AsyncPayments.apays import AsyncAPays
 from AsyncPayments.platega import AsyncPlatega
+from AsyncPayments.rollypay import AsyncRollyPay
+from AsyncPayments.pay2328io import Async2328io
 
 ruKassa = AsyncRuKassa(api_token="ApiToken", shop_id=1, email="Email", password="Password")
 lolz = AsyncLolzteamMarketPayment(token="Token")
@@ -32,15 +33,17 @@ aaio = AsyncAaio(apikey="ApiKey", shopid="ShopID", secretkey="SecretKey")
 cryptoBot = AsyncCryptoBot(token="CryptoPayToken", is_testnet=False)
 crystalPay = AsyncCrystalPay(login="Login", secret="Secret", salt="Salt")
 freeKassa = AsyncFreeKassa(apiKey="ApiKey", shopId=1)
-payok = AsyncPayOK(apiKey="ApiKey", secretKey="SecretKey", apiId=1, shopId=1)
 cryptomus = AsyncCryptomus(payment_api_key="PaymentApiKey", merchant_id="MerchantID", payout_api_key="PayoutApiKey")
 xrocket = AsyncXRocket(apiKey="ApiKey")
 yoomoney = AsyncYoomoney(access_token="AccessToken")
 apays = AsyncAPays(client_id=1, secret_key="SecretKey")
 platega = AsyncPlatega(merchant_id=1, secret_key="SecretKey")
+rolly = AsyncRollyPay(api_key="ApiKey", terminal_id="TerminalID")
+pay2328io = Async2328io(api_key="ApiKey", project_uuid="ProjectUUID")
 
 async def main():
-    balance_payok = await payok.get_balance()
+    balance_rolly = await rolly.get_balance()
+    balance_2328io = await pay2328io.get_balance()
     balance_freekassa = await freeKassa.get_balance()
     balance_rukassa = await ruKassa.get_balance()
     balance_lolz = await lolz.get_me()
@@ -51,9 +54,13 @@ async def main():
     balance_xrocket = await xrocket.get_app_info()
     balance_yoomoney = await yoomoney.account_info()
 
-    print("PayOK:")
-    print("Balance: ", balance_payok.balance)
-    print("Referral balance: ", balance_payok.ref_balance)
+    print("RollyPay:")
+    print("Available USDT: ", balance_rolly.available_usdt)
+    print("Hold USDT: ", balance_rolly.hold_usdt)
+    print('--------------')
+    print("2328.io:")
+    for balance in balance_2328io:
+        print(f"Available {balance.currency_code}: {balance.balance} {balance.currency_code} ({balance.balance_usd}$, lock: {balance.locked_balance} {balance.currency_code})")
     print('--------------')
     print("FreeKassa:")
     for balance in balance_freekassa:
@@ -102,7 +109,8 @@ async def main():
         
     print('------------------------------------------')
 
-    order_payok = await payok.create_pay(15, "orderId")
+    order_rolly = await rolly.create_payment("1500.00", "RUB", "orderId")
+    order_2328io = await pay2328io.create_payment(150.0, "RUB", "orderId", "https://example.com")
     order_freeKassa = await freeKassa.create_order(1, "example@gmail.com", "0.0.0.0", 150, "RUB")
     order_ruKassa = await ruKassa.create_payment(15)
     order_lolz = await lolz.create_invoice(15, "paymentId", "comment", "https://example.com", 1)
@@ -115,7 +123,8 @@ async def main():
     order_apays = await apays.create_order("orderId", 15)
     order_platega = await platega.create_order(2, 15, "RUB", "description")
 
-    print("PayOK", order_payok)
+    print("RollyPay", order_rolly.pay_url)
+    print("2328.io", order_2328io.url)
     print("FreeKassa", order_freeKassa.location)
     print("RuKassa: ", order_ruKassa.url)
     print("Lolz: ":, order_lolz.url)
@@ -130,7 +139,8 @@ async def main():
 
     print('------------------------------------------')
 
-    info_payok = await payok.get_transactions("orderId")
+    info_rolly = await rolly.get_payment("paymentId")
+    info_2328io = await pay2328io.get_payment(order_id="orderId")
     info_freeKassa = await freeKassa.get_orders("orderId")
     info_ruKassa = await ruKassa.get_info_payment("orderId")
     info_lolz = await lolz.get_invoice(payment_id="paymentId")
@@ -143,9 +153,13 @@ async def main():
     info_apays = await apays.get_order("orderId")
     info_platega = await platega.get_order("orderId")
 
-    print("PayOK:")
-    print("Amount: ", info_payok.amount)
-    print("Status: ", info_payok.transaction_status)
+    print("RollyPay:")
+    print("Amount: ", info_rolly.amount)
+    print("Status: ", info_rolly.status)
+    print('--------------')
+    print("2328.io:")
+    print("Amount: ", info_2328io.amount)
+    print("Status: ", info_2328io.payment_status)
     print('--------------')
     print("FreeKassa:")
     print("Amount: ", info_freeKassa.orders[0].amount)
@@ -194,9 +208,17 @@ asyncio.run(main())
 ```
 ## Output
 ```Python
-PayOK:
-Balance: 0
-Referral balance: 0.00
+RollyPay:
+Available USDT:  -1.57842382
+Hold USDT:  0.00000000
+--------------
+2328.io:
+Available AVAX: 0.00 AVAX (0.00$, lock: 0.00 AVAX)
+Available BNB: 0.00 BNB (0.00$, lock: 0.00 BNB)
+Available BTC: 0.00 BTC (0.00$, lock: 0.00 BTC)
+Available DOGE: 0.00 DOGE (0.00$, lock: 0.00 DOGE)
+Available ETH: 0.00 ETH (0.00$, lock: 0.00 ETH)
+...
 --------------
 FreeKassa:
 RUB:  0.00
@@ -267,7 +289,8 @@ YooMoney:
 Account: 4100112252967685
 Available balance: 236.24
 ------------------------------------------
-PayOK: https://payok.io//pay?amount=15&payment=4364575733&shop=12452&currency=RUB&desc=Description&sign=af2fdc6796750e3c6910230095ec0ed8
+RollyPay: https://pay.rollypay.io/pay/J8_RVO33btNdxTFHzKjGn3GFeZ3lDgBiwBNXO0J-apI
+2328.io: https://pay.2328.io/b3436fa5-6fd4-4c3f-9a46-1a627ad6efb3
 FreeKassa: https://pay.freekassa.com/form/161328352/576046439bd01de60a6e418bad9354a2
 RuKassa:  https://pay.ruks.pro/?hash=435fc3cee737f9dac2b34c9ba9311eae
 Lolz:  https://lzt.market/invoice/369/
@@ -280,9 +303,13 @@ YooMoney:  https://yoomoney.ru/transfer/quickpay?requestId=353635343031333732365
 APays:  https://apays.shop/order?id=77197d6-faa9-467ad-bdea-2534a7258b01
 Platega:  https://pay.platega.io?id=61dh392d-67a8-4555-9ac9-f3337f52fd08&mh=b6hba81f-1972-4f46-a90c-0d143df49425
 ------------------------------------------
-PayOK:
-Amount:  15
-Status:  0
+RollyPay:
+Amount:  1500.00
+Status:  created
+--------------
+2328.io:
+Amount:  150.00
+Status:  check
 --------------
 FreeKassa:
 Amount:  150
@@ -335,12 +362,13 @@ Status:  PENDING
 > CrystalPay: https://docs.crystalpay.io/ <br>
 > RuKassa: https://lk.rukassa.pro/api/v1 <br>
 > FreeKassa: https://docs.freekassa.com/ <br>
-> PayOK: https://payok.io/cabinet/documentation/doc_main.php <br>
 > Cryptomus: https://doc.cryptomus.com/business <br>
 > XRocket: https://pay.xrocket.tg/api/#/ <br>
 > YooMoney: https://yoomoney.ru/docs/wallet <br>
 > APays: https://docs.apays.io/lets-start/api/how-to-start <br>
 > Platega: https://docs.platega.io/авторизация-1678262m0 <br>
+> RollyPay: https://docs.rollypay.io/ <br>
+> 2328.io: https://doc.2328.io/ <br>
 
 ## Developer Links
 > Zelenka (Lolzteam): https://lzt.market/tosa <br>
