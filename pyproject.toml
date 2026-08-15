@@ -3,7 +3,7 @@ requires = ["setuptools", "setuptools-scm"]
 build-backend = "setuptools.build_meta"
 [project]
 name = "AsyncPayments"
-version = "1.6"
+version = "1.6.2"
 dependencies = [
     "aiohttp"
 ]
@@ -27,11 +27,6 @@ keywords = [
     "free kassa",
     "ru kassa",
     "cryptomus",
-    "xrocket",
-    "rollypay",
-    "2328io",
-    "apays",
-    "platega"
 ]
 classifiers = [
     "Development Status :: 5 - Production/Stable",

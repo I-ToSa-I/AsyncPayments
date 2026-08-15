@@ -549,7 +549,7 @@ class AsyncCrystalPay(RequestsClient):
         :param transfer_id: ID of the transfer.
         """
         
-        url = f"{self.__base_url}/transfer/submit/"
+        url = f"{self.__base_url}/transfer/cancel/"
         signature = hashlib.sha1(str.encode(f"{transfer_id}:{self.__salt}")).hexdigest()
         
         params = {

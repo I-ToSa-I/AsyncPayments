@@ -337,7 +337,7 @@ class AsyncXRocket(RequestsClient):
         }
         self._delete_empty_fields(params)
         url = f"{self.__base_url}/subscriptions"
-        response = await self._request(self.__payment_name, self.__post_method, url, headers=self.__headers)
+        response = await self._request(self.__payment_name, self.__post_method, url, headers=self.__headers, json=params)
         return Subscription(**response['data'])
 
     async def get_list_subscriptions(self, limit: Optional[int] = 100, offset: Optional[int] = 0) -> SubscriptionsList:
@@ -441,5 +441,5 @@ class AsyncXRocket(RequestsClient):
             "status": status,
         }
         url = f"{self.__base_url}/subscriptions/{subscription_id}"
-        response = await self._request(self.__payment_name, self.__post_method, url, headers=self.__headers)
+        response = await self._request(self.__payment_name, self.__post_method, url, headers=self.__headers, json=params)
         return Subscriptions.Interval(**response['data'])

@@ -200,7 +200,7 @@ class AsyncRollyPay(RequestsClient):
         )
         return SubscriptionList(**response)
     
-    async def get_subscription_list(self, subscription_id: str) -> SubscriptionList:
+    async def get_subscription(self, subscription_id: str) -> SubscriptionList:
         """Get a subscription.
                 
         Docs: https://docs.rollypay.io/api/recurring
@@ -266,7 +266,7 @@ class AsyncRollyPay(RequestsClient):
         )
         return Payout(**response)
     
-    async def create_payout(self) -> List[Payout]:
+    async def get_payout_list(self) -> List[Payout]:
         """Returning list of payouts.
                 
         Docs: https://docs.rollypay.io/api/payouts"""
