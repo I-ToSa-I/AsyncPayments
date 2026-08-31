@@ -3,9 +3,11 @@ requires = ["setuptools", "setuptools-scm"]
 build-backend = "setuptools.build_meta"
 [project]
 name = "AsyncPayments"
-version = "1.6.2"
+version = "1.7"
 dependencies = [
-    "aiohttp"
+    "aiohttp",
+    "pydantic", 
+    "certifi"
 ]
 requires-python = ">= 3.9"
 authors = [

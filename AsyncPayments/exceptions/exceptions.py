@@ -18,10 +18,6 @@ class UnexpectedError(Exception):
     pass
 
 
-class InvalidRequest(Exception):
-    pass
-
-
 class UnauthorizedClient(Exception):
     pass
 

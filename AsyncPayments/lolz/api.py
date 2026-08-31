@@ -43,7 +43,7 @@ class AsyncLolzteamMarketPayment(RequestsClient):
             "Authorization": f"Bearer {self.__token}",
             "Accept": "application/json",
         }
-        self.__base_url = "https://prod-api.lzt.market"
+        self.__base_url = "https://api.lzt.market"
         self.__get_method = "GET"
         self.__post_method = "POST"
         self.__payment_name = "lolz"

@@ -1,1 +1,1 @@
-from .exceptions import BadRequest, RequestError, MissingScopeError, IncorrectTokenError, UnexpectedError, InvalidGrant, InvalidRequest, UnauthorizedClient, EmptyToken
+from .exceptions import BadRequest, RequestError, MissingScopeError, IncorrectTokenError, UnexpectedError, InvalidGrant, UnauthorizedClient, EmptyToken
