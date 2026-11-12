@@ -2,7 +2,7 @@
 ![PyPiAsyncPaymentsPackage](https://img.shields.io/badge/pypi-AsyncPayments-red)
 ![PyPiAsyncPaymentsPackageVersion](https://img.shields.io/pypi/v/AsyncPayments)
 ![PyPI - Python Version](https://img.shields.io/pypi/pyversions/AsyncPayments?color=brightgreen)
-[![PyPI Downloads](https://static.pepy.tech/personalized-badge/asyncpayments?period=total&units=INTERNATIONAL_SYSTEM&left_color=BLACK&right_color=GREEN&left_text=downloads)](https://pepy.tech/projects/asyncpayments)
+[![PyPI Downloads](https://static.pepy.tech/personalized-badge/asyncpayments?period=total&units=INTERNATIONAL_SYSTEM&left_color=GRAY&right_color=GREEN&left_text=downloads)](https://pepy.tech/projects/asyncpayments)
 
 > Add payment acceptance to your projects.
 ## Installing
