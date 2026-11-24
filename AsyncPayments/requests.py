@@ -107,6 +107,9 @@ class RequestsClient:
         elif payment == "2328io":
             if response.get("state") == 1:
                 raise BadRequest("[2328.io] " + str(response.get("errors")))
+        elif payment == "coinspay":
+            error = response.get("error") or {}
+            raise BadRequest(f"[CoinsPay] {error.get('code')}: {error.get('message')}")
         else:
             # RollyPay
             if response.get("error"):

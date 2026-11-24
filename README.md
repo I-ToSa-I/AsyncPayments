@@ -28,6 +28,7 @@ from AsyncPayments.apays import AsyncAPays
 from AsyncPayments.platega import AsyncPlatega
 from AsyncPayments.rollypay import AsyncRollyPay
 from AsyncPayments.pay2328io import Async2328io
+from AsyncPayments.coinspay import AsyncCoinsPay
 
 async def main():
     async with AsyncExitStack() as stack:
@@ -44,9 +45,11 @@ async def main():
         platega = await stack.enter_async_context(AsyncPlatega(merchant_id=1, secret_key="SecretKey"))
         rolly = await stack.enter_async_context(AsyncRollyPay(api_key="ApiKey", terminal_id="TerminalID"))
         pay2328io = await stack.enter_async_context(Async2328io(api_key="ApiKey", project_uuid="ProjectUUID"))
+        coinspay = await stack.enter_async_context(AsyncCoinsPay(api_key="ApiKey"))
 
         balance_rolly = await rolly.get_balance()
         balance_2328io = await pay2328io.get_balance()
+        balance_coinspay = await coinspay.get_balances()
         balance_freekassa = await freeKassa.get_balance()
         balance_rukassa = await ruKassa.get_balance()
         balance_lolz = await lolz.get_me()
@@ -64,6 +67,10 @@ async def main():
         print("2328.io:")
         for balance in balance_2328io:
             print(f"Available {balance.currency_code}: {balance.balance} {balance.currency_code} ({balance.balance_usd}$, lock: {balance.locked_balance} {balance.currency_code})")
+        print('--------------')
+        print("CoinsPay:")
+        for balance in balance_coinspay:
+            print(f"Available {balance.asset} ({balance.chain}): {balance.confirmed} {balance.asset} (pending: {balance.pending} {balance.asset})")
         print('--------------')
         print("FreeKassa:")
         for balance in balance_freekassa:
@@ -114,6 +121,7 @@ async def main():
 
         order_rolly = await rolly.create_payment("1500.00", "RUB", "orderId")
         order_2328io = await pay2328io.create_payment(150.0, "RUB", "orderId", "https://example.com")
+        order_coinspay = await coinspay.create_invoice("150.00", "RUB", title="Order #orderId", reference="orderId")
         order_freeKassa = await freeKassa.create_order(1, "example@gmail.com", "0.0.0.0", 150, "RUB")
         order_ruKassa = await ruKassa.create_payment(15)
         order_lolz = await lolz.create_invoice(15, "paymentId", "comment", "https://example.com", 1)
@@ -128,6 +136,7 @@ async def main():
 
         print("RollyPay", order_rolly.pay_url)
         print("2328.io", order_2328io.url)
+        print("CoinsPay", order_coinspay.pay_url)
         print("FreeKassa", order_freeKassa.location)
         print("RuKassa: ", order_ruKassa.url)
         print("Lolz: ":, order_lolz.url)
@@ -144,6 +153,7 @@ async def main():
 
         info_rolly = await rolly.get_payment("paymentId")
         info_2328io = await pay2328io.get_payment(order_id="orderId")
+        info_coinspay = await coinspay.get_invoice(order_coinspay.id)
         info_freeKassa = await freeKassa.get_orders("orderId")
         info_ruKassa = await ruKassa.get_info_payment("orderId")
         info_lolz = await lolz.get_invoice(payment_id="paymentId")
@@ -163,6 +173,10 @@ async def main():
         print("2328.io:")
         print("Amount: ", info_2328io.amount)
         print("Status: ", info_2328io.payment_status)
+        print('--------------')
+        print("CoinsPay:")
+        print("Amount: ", info_coinspay.amount)
+        print("Status: ", info_coinspay.status)
         print('--------------')
         print("FreeKassa:")
         print("Amount: ", info_freeKassa.orders[0].amount)
@@ -221,6 +235,11 @@ Available BNB: 0.00 BNB (0.00$, lock: 0.00 BNB)
 Available BTC: 0.00 BTC (0.00$, lock: 0.00 BTC)
 Available DOGE: 0.00 DOGE (0.00$, lock: 0.00 DOGE)
 Available ETH: 0.00 ETH (0.00$, lock: 0.00 ETH)
+...
+--------------
+CoinsPay:
+Available USDT (tron): 0 USDT (pending: 0 USDT)
+Available USDT (bsc): 0 USDT (pending: 0 USDT)
 ...
 --------------
 FreeKassa:
@@ -294,6 +313,7 @@ Available balance: 236.24
 ------------------------------------------
 RollyPay: https://pay.rollypay.io/pay/J8_RVO33btNdxTFHzKjGn3GFeZ3lDgBiwBNXO0J-apI
 2328.io: https://pay.2328.io/b3436fa5-6fd4-4c3f-9a46-1a627ad6efb3
+CoinsPay: https://coinspay.app/pay/4821-kqzp-m7wd
 FreeKassa: https://pay.freekassa.com/form/161328352/576046439bd01de60a6e418bad9354a2
 RuKassa:  https://pay.ruks.pro/?hash=435fc3cee737f9dac2b34c9ba9311eae
 Lolz:  https://lzt.market/invoice/369/
@@ -313,6 +333,10 @@ Status:  created
 2328.io:
 Amount:  150.00
 Status:  check
+--------------
+CoinsPay:
+Amount:  150
+Status:  open
 --------------
 FreeKassa:
 Amount:  150
@@ -372,6 +396,7 @@ Status:  PENDING
 > Platega: https://docs.platega.io/авторизация-1678262m0 <br>
 > RollyPay: https://docs.rollypay.io/ <br>
 > 2328.io: https://doc.2328.io/ <br>
+> CoinsPay: https://coinspay.app/docs <br>
 
 ## Developer Links
 > Zelenka (Lolzteam): https://lzt.market/tosa <br>
